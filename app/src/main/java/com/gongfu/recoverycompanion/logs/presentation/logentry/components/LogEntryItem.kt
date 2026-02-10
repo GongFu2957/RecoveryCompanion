@@ -1,0 +1,86 @@
+package com.gongfu.recoverycompanion.logs.presentation.logentry.components
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.gongfu.recoverycompanion.logs.domain.LogEntry
+import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import java.time.LocalDate
+
+@Composable
+fun LogEntryItem(
+    log: LogEntry,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val contentColor = if(isSystemInDarkTheme()) {
+        Color.White
+    } else {
+        Color.Black
+    }
+    Row(
+        modifier = Modifier
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = log.title,
+                fontWeight = FontWeight.Medium,
+                fontSize = 20.sp,
+                color = contentColor
+            )
+            Text(
+                text = log.creationDate.toString(),
+                fontWeight = FontWeight.Light,
+                fontSize = 14.sp,
+                color = contentColor
+            )
+        }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview
+@Composable
+private fun LogEntryItemPreview() {
+    RecoveryCompanionTheme {
+        LogEntryItem(
+            log = previewLog,
+            onClick = { /* TO DO */ },
+            modifier = Modifier.background(
+                MaterialTheme.colorScheme.background
+            )
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+internal val previewLog = LogEntry(
+        creationDate = LocalDate.now(),
+        id = 0L,
+        title = "Home Alone",
+        description = "I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have",
+        trigger = "Procrastination",
+        location = "Bathroom",
+        intensityLevel = 7,
+        bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety."
+)

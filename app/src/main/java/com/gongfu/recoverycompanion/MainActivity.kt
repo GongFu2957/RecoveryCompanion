@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.gongfu.recoverycompanion.logs.presentation.logentry.LogEntryScreen
+import com.gongfu.recoverycompanion.logs.presentation.logentry.LogEntryState
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,7 +19,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             RecoveryCompanionTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    val state = LogEntryState()
                     LogEntryScreen(
+                        state = state,
+                        onAction = {},
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
