@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class LogEntry(
     val creationDate: LocalDate,
-    val id: Long,
+    val id: Int,
     val title: String,
     val description: String,
     val trigger: String,

@@ -14,10 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.LogEntry
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import java.time.LocalDate
@@ -33,33 +36,52 @@ fun LogEntryItem(
     } else {
         Color.Black
     }
-    Row(
-        modifier = Modifier
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
+    Column(
+        modifier = modifier
+            .padding(16.dp)
     ) {
-        Column(
-            horizontalAlignment = Alignment.Start
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
+            Column(
+                horizontalAlignment = Alignment.Start
+            ) {
+                Text(
+                    text = log.title,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp,
+                    color = contentColor
+                )
+                Text(
+                    text = log.creationDate.toString(),
+                    fontWeight = FontWeight.Light,
+                    fontSize = 14.sp,
+                    color = contentColor
+                )
+            }
+        }
+        Column() {
             Text(
-                text = log.title,
-                fontWeight = FontWeight.Medium,
-                fontSize = 20.sp,
-                color = contentColor
+                text = stringResource(R.string.description_field),
+                fontWeight = FontWeight.Thin,
+                fontStyle = FontStyle.Italic,
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.secondary
             )
             Text(
-                text = log.creationDate.toString(),
+                text = log.description,
                 fontWeight = FontWeight.Light,
                 fontSize = 14.sp,
                 color = contentColor
             )
         }
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@Preview
+@PreviewLightDark
 @Composable
 private fun LogEntryItemPreview() {
     RecoveryCompanionTheme {
@@ -76,7 +98,7 @@ private fun LogEntryItemPreview() {
 @RequiresApi(Build.VERSION_CODES.O)
 internal val previewLog = LogEntry(
         creationDate = LocalDate.now(),
-        id = 0L,
+        id = 0,
         title = "Home Alone",
         description = "I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have",
         trigger = "Procrastination",
