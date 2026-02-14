@@ -1,9 +1,7 @@
 package com.gongfu.recoverycompanion.logs.domain
 
-import java.time.LocalDate
-
 data class LogEntry(
-    val creationDate: LocalDate,
+    val timeStamp: Long,
     val id: Int,
     val title: String,
     val description: String,
