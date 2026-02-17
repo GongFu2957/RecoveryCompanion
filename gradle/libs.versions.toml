@@ -11,6 +11,7 @@ composeBom = "2024.09.00"
 koin = "4.1.1"
 room = "2.8.4"
 ksp = "2.3.2"
+coreKtxVersion = "1.17.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,10 +34,12 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 #ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
