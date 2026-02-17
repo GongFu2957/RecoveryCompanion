@@ -43,6 +43,11 @@ android {
     }
 }
 
+configurations.all { // Temp fix for agp and ksp
+    exclude(group = "com.intellij", module = "annotations")
+}
+
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
