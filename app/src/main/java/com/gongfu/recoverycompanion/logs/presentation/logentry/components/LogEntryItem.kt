@@ -21,8 +21,10 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
-import com.gongfu.recoverycompanion.logs.domain.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun LogEntryItem(
@@ -53,7 +55,7 @@ fun LogEntryItem(
                     color = contentColor
                 )
                 Text(
-                    text = "${log.timeStamp}",
+                    text = "${log.dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE)}",
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp,
                     color = contentColor
@@ -96,8 +98,8 @@ private fun LogEntryItemPreview() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 internal val previewLog = LogEntry(
-        timeStamp = 20260213,
         id = 0,
+        dateTime = ZonedDateTime.now(),
         title = "Home Alone",
         description = "I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have",
         trigger = "Procrastination",

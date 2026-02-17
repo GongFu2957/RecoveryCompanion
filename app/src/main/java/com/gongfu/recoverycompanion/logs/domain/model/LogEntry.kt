@@ -1,11 +1,10 @@
-package com.gongfu.recoverycompanion.logs.domain
+package com.gongfu.recoverycompanion.logs.domain.model
 
-import androidx.room.Entity
+import java.time.ZonedDateTime
 
-@Entity
 data class LogEntry(
-    val timeStamp: Long,
-    val id: Int,
+    val id: Long,
+    val dateTime: ZonedDateTime,
     val title: String,
     val description: String,
     val trigger: String,

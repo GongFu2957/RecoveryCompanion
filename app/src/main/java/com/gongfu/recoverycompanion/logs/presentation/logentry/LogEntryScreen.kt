@@ -49,7 +49,7 @@ fun LogEntryScreenPreview() {
             state = LogEntryState(
                 logs = (1..50).map {
                     previewLog.copy(
-                        title = "$it " + "Home Alone."
+                        title = "$it Home Alone."
                     )
                 }
             ),
