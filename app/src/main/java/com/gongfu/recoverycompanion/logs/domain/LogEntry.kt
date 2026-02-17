@@ -1,5 +1,8 @@
 package com.gongfu.recoverycompanion.logs.domain
 
+import androidx.room.Entity
+
+@Entity
 data class LogEntry(
     val timeStamp: Long,
     val id: Int,
