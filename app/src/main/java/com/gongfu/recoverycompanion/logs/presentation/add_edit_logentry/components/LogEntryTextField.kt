@@ -65,7 +65,9 @@ fun LogEntryTextField(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = if (isFieldFocused)
                         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.08f)
-                    else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.04f)
+                    else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.04f),
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+
                 ),
             )
             }
