@@ -6,7 +6,7 @@ import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 fun LogEntry.toLogEntryEntity(): LogEntryEntity {
    return LogEntryEntity(
        id = id,
-       dateTime = dateTime,
+       timestamp = timestamp,
        title = title,
        description = description,
        trigger = trigger,
@@ -19,7 +19,7 @@ fun LogEntry.toLogEntryEntity(): LogEntryEntity {
 fun LogEntryEntity.toLogEntry(): LogEntry {
     return LogEntry(
         id = id,
-        dateTime = dateTime,
+        timestamp = timestamp,
         title = title,
         description = description,
         trigger = trigger,

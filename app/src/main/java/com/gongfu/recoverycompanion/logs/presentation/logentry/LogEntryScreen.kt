@@ -1,7 +1,5 @@
 package com.gongfu.recoverycompanion.logs.presentation.logentry
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,10 +38,9 @@ fun LogEntryScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @PreviewLightDark
 @Composable
-fun LogEntryScreenPreview() {
+private fun LogEntryScreenPreview() {
     RecoveryCompanionTheme {
         LogEntryScreen(
             state = LogEntryState(

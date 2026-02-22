@@ -1,13 +1,13 @@
 package com.gongfu.recoverycompanion.logs.presentation.logentry.components
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,9 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun LogEntryItem(
@@ -55,7 +54,7 @@ fun LogEntryItem(
                     color = contentColor
                 )
                 Text(
-                    text = "${log.dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE)}",
+                    text = "${log.timestamp}",
                     fontWeight = FontWeight.Light,
                     fontSize = 14.sp,
                     color = contentColor
@@ -76,12 +75,22 @@ fun LogEntryItem(
                 fontSize = 14.sp,
                 color = contentColor
             )
+            HorizontalDivider(
+                modifier = Modifier.padding(2.dp),
+                color = MaterialTheme.colorScheme.primary
+            )
+            LogEntryTextField(
+                label = log.title,
+                value = log.title ,
+                onValueChange = {},
+                error = null,
+                modifier = modifier.fillMaxWidth(),
+            )
         }
     }
 
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @PreviewLightDark
 @Composable
 private fun LogEntryItemPreview() {
@@ -96,10 +105,9 @@ private fun LogEntryItemPreview() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 internal val previewLog = LogEntry(
         id = 0,
-        dateTime = ZonedDateTime.now(),
+        timestamp = 0L,
         title = "Home Alone",
         description = "I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have",
         trigger = "Procrastination",

@@ -8,7 +8,7 @@ import java.time.ZonedDateTime
 data class LogEntryEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val dateTime: ZonedDateTime,
+    val timestamp: Long,
     val title: String,
     val description: String,
     val trigger: String,

@@ -1,10 +1,8 @@
 package com.gongfu.recoverycompanion.logs.domain.model
 
-import java.time.ZonedDateTime
-
 data class LogEntry(
     val id: Long,
-    val dateTime: ZonedDateTime,
+    val timestamp: Long,
     val title: String,
     val description: String,
     val trigger: String,
@@ -12,3 +10,5 @@ data class LogEntry(
     val intensityLevel: Int,
     val bodyResponse: String
 )
+
+class InvalidLogException(message: String) : Exception(message)
