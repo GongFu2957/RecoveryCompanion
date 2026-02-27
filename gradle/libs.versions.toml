@@ -11,7 +11,6 @@ composeBom = "2024.09.00"
 koin = "4.1.1"
 room = "2.8.4"
 ksp = "2.3.2"
-coreKtxVersion = "1.17.0"
 navigationRuntimeKtx = "2.9.7"
 
 [libraries]
@@ -35,7 +34,6 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtxVersion" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 
 [plugins]

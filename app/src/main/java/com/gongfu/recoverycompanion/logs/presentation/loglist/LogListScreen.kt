@@ -1,4 +1,4 @@
-package com.gongfu.recoverycompanion.logs.presentation.logentry
+package com.gongfu.recoverycompanion.logs.presentation.loglist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,14 +12,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.gongfu.recoverycompanion.logs.presentation.logentry.components.LogEntryItem
-import com.gongfu.recoverycompanion.logs.presentation.logentry.components.previewLog
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 @Composable
 fun LogEntryScreen(
-    state: LogEntryState,
-    onAction: (LogEntryAction) -> Unit,
+    state: LogListState,
+    onAction: (LogListAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -43,7 +43,7 @@ fun LogEntryScreen(
 private fun LogEntryScreenPreview() {
     RecoveryCompanionTheme {
         LogEntryScreen(
-            state = LogEntryState(
+            state = LogListState(
                 logs = (1..50).map {
                     previewLog.copy(
                         title = "$it Home Alone."

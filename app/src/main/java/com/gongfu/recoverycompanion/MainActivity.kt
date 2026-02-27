@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.gongfu.recoverycompanion.logs.presentation.logentry.LogEntryScreen
-import com.gongfu.recoverycompanion.logs.presentation.logentry.LogEntryState
-import com.gongfu.recoverycompanion.logs.presentation.logentry.components.previewLog
+import com.gongfu.recoverycompanion.logs.presentation.loglist.LogEntryScreen
+import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListState
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             RecoveryCompanionTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LogEntryScreen(
-                        state = previewLogEntryState,
+                        state = previewLogListState,
                         onAction = {},
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -36,8 +36,8 @@ class MainActivity : ComponentActivity() {
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-private val previewLogEntryState =
-    LogEntryState(
+private val previewLogListState =
+    LogListState(
             logs = (1..50).map {
                 previewLog.copy(
                     title = "$it Home Alone."
