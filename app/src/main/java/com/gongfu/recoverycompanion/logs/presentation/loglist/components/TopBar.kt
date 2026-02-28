@@ -3,6 +3,7 @@ package com.gongfu.recoverycompanion.logs.presentation.loglist.components
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -12,13 +13,16 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    onAction: () -> Unit,
+    onFilterClick: () -> Unit,
+    onMoreMenuClick: () -> Unit,
     modifier: Modifier
 ) {
     TopAppBar(
@@ -33,10 +37,17 @@ fun TopBar(
             )
         },
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = onFilterClick) {
                 Icon(
                     imageVector = Icons.Filled.FilterList,
-                    contentDescription = "Localized description"
+                    contentDescription = stringResource(R.string.filter_list)
+                )
+            }
+
+            IconButton(onClick = onMoreMenuClick) {
+                Icon(
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = stringResource(R.string.more_menu)
                 )
             }
         },
@@ -48,7 +59,8 @@ fun TopBar(
 private fun TopBarPreview() {
     RecoveryCompanionTheme {
         TopBar(
-            onAction = {},
+            onFilterClick = {},
+            onMoreMenuClick = {},
             modifier = Modifier.background(
                 MaterialTheme.colorScheme.background
             )

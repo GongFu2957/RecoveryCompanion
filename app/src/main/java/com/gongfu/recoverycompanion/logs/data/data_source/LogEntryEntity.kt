@@ -2,7 +2,6 @@ package com.gongfu.recoverycompanion.logs.data.data_source
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.ZonedDateTime
 
 @Entity(tableName = "logs_entries")
 data class LogEntryEntity(
@@ -14,6 +13,7 @@ data class LogEntryEntity(
     val trigger: String,
     val location: String,
     val intensityLevel: Int,
-    val bodyResponse: String
+    val bodyResponse: String,
+    val outcome: Boolean
 )
 

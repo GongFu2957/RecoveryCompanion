@@ -8,7 +8,8 @@ data class LogEntry(
     val trigger: String,
     val location: String,
     val intensityLevel: Int,
-    val bodyResponse: String
+    val bodyResponse: String,
+    val outcome: Boolean
 )
 
 class InvalidLogException(message: String) : Exception(message)

@@ -12,7 +12,8 @@ fun LogEntry.toLogEntryEntity(): LogEntryEntity {
        trigger = trigger,
        location = location,
        intensityLevel = intensityLevel,
-       bodyResponse = bodyResponse
+       bodyResponse = bodyResponse,
+       outcome = outcome
    )
 }
 
@@ -25,6 +26,7 @@ fun LogEntryEntity.toLogEntry(): LogEntry {
         trigger = trigger,
         location = location,
         intensityLevel = intensityLevel,
-        bodyResponse = bodyResponse
+        bodyResponse = bodyResponse,
+        outcome = outcome
     )
 }

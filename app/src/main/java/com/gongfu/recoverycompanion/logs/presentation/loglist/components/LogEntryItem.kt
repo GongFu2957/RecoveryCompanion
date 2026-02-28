@@ -10,24 +10,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.filled.Mood
+import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
@@ -40,6 +40,15 @@ fun LogEntryItem(
     modifier: Modifier = Modifier
 ) {
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
+
+    val maxTitleChars = 18
+    val truncatedTitle = remember(log.title) {
+        if (log.title.length <= maxTitleChars) {
+            log.title
+        } else {
+            "${log.title.take(maxTitleChars)}..."
+        }
+    }
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
@@ -49,7 +58,7 @@ fun LogEntryItem(
 
     ) {
         Icon(
-            imageVector = Icons.Default.ThumbUp,
+            imageVector = if (!log.outcome) Icons.Default.MoodBad else Icons.Default.Mood,
             contentDescription = "Icon",
             tint = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.size(50.dp)
@@ -62,11 +71,9 @@ fun LogEntryItem(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Column(
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
+                Column {
                     Text(
-                        text = log.title,
+                        text = truncatedTitle,
                         fontWeight = FontWeight.Medium,
                         fontSize = 20.sp,
                         overflow = TextOverflow.Ellipsis,
@@ -74,15 +81,12 @@ fun LogEntryItem(
                         color = contentColor,
                     )
                     Text(
-                        text = "Intensity Level",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Light,
-                            fontSize = 8.sp,
-                            color = contentColor,
-                            platformStyle = PlatformTextStyle(
-                                includeFontPadding = true
-                            )
-                        )
+                        text = stringResource(R.string.intensity_level),
+                        fontWeight = FontWeight.Light,
+                        fontSize = 10.sp,
+                        color = contentColor.copy(alpha = .8f),
+                        letterSpacing = .5.sp,
+
                     )
                 }
                 Text(
@@ -99,16 +103,6 @@ fun LogEntryItem(
                 contentColor = contentColor
             )
         }
-        Icon(
-            imageVector = Icons.Default.MoreVert,
-            contentDescription = "Open menu",
-            tint = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier
-                .clickable(onClick = onClick)
-                .size(25.dp)
-                .clip(MaterialTheme.shapes.small)
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-        )
     }
 }
 
@@ -131,11 +125,45 @@ internal val timeStamp = ZonedDateTime.now().toInstant().toEpochMilli()
 internal val previewLog = LogEntry(
         id = 0,
         timestamp = timeStamp,
-        title = "Title",
+        title = "Hello world!",
         description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
         trigger = "Procrastination",
         location = "Bathroom",
-        intensityLevel = 7,
-        bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety."
+        intensityLevel = 4,
+        bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
+        outcome = true
+)
+internal val previewLog2 = LogEntry(
+    id = 0,
+    timestamp = timeStamp,
+    title = "I can't believe it happened again!",
+    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
+    trigger = "Procrastination",
+    location = "Bathroom",
+    intensityLevel = 7,
+    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
+    outcome = false
+)
+internal val previewLog3 = LogEntry(
+    id = 0,
+    timestamp = timeStamp,
+    title = "Why!!!! AGAIN!",
+    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
+    trigger = "Procrastination",
+    location = "Bathroom",
+    intensityLevel = 6,
+    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
+    outcome = false
+)
+internal val previewLog4 = LogEntry(
+    id = 0,
+    timestamp = timeStamp,
+    title = "HUGE WIN",
+    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
+    trigger = "Procrastination",
+    location = "Bathroom",
+    intensityLevel = 3,
+    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
+    outcome = true
 )
 

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Recovery Companion</string>
     <string name="description_field">Description</string>
-    <string name="open_menu">Open Menu</string>
+    <string name="new_task">New Task</string>
+    <string name="more_menu">More menu</string>
+    <string name="filter_list">Filter list</string>
+    <string name="intensity_level">Intensity level</string>
 </resources>

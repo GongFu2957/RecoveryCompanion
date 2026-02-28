@@ -17,15 +17,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.TopBar
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import com.gongfu.recoverycompanion.R
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog2
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog3
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog4
 
 @Composable
-fun LogEntryScreen(
+fun LogListScreen(
     state: LogListState,
     onAction: (LogListAction) -> Unit,
     modifier: Modifier = Modifier
@@ -33,17 +38,22 @@ fun LogEntryScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = { TopBar(
-            onAction = {} ,
+            onFilterClick = {
+                onAction(LogListAction.OnFilterClick)
+            },
+            onMoreMenuClick = {
+                onAction(LogListAction.OnMoreMenuClick)
+            },
             modifier = Modifier.fillMaxWidth()
         )},
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = { onAction(LogListAction.CreateLog) },
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add Log Entry",
+                    contentDescription = stringResource(R.string.new_task),
                 )
             }
         },
@@ -85,15 +95,24 @@ private fun NoteListContent(
 
 @PreviewLightDark
 @Composable
-private fun LogEntryScreenPreview() {
+private fun LogListScreenPreview() {
     RecoveryCompanionTheme {
-        LogEntryScreen(
+        val previewLogs = listOf(
+            previewLog,
+            previewLog2,
+            previewLog3,
+            previewLog4
+        )
+        LogListScreen(
             state = LogListState(
-                logs = (1..50).map {
-                    previewLog.copy(
-                        title = "$it Home Alone."
-                    )
-                }
+                logs = previewLogs.shuffled().flatMap { baseLog ->
+                    (1..13).map { // ~50 total items
+                        baseLog.copy(
+                            title = baseLog.title + " $it",
+                            id = it.toLong()
+                        )
+                    }
+                }.shuffled() // Final shuffle for variety
             ),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)

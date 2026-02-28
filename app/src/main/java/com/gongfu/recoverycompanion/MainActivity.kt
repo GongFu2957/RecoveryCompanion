@@ -1,18 +1,17 @@
 package com.gongfu.recoverycompanion
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.gongfu.recoverycompanion.logs.presentation.loglist.LogEntryScreen
+import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListScreen
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListState
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog2
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog3
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog4
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,25 +20,31 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             RecoveryCompanionTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LogEntryScreen(
+                    LogListScreen(
                         state = previewLogListState,
                         onAction =  { },
                         modifier = Modifier.fillMaxSize()
                     )
-                }
             }
         }
     }
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+private val previewLogs = listOf(
+   previewLog,
+    previewLog2,
+    previewLog3,
+    previewLog4
+)
 private val previewLogListState =
     LogListState(
-            logs = (1..50).map {
-                previewLog.copy(
-                    title = "$it Home Alone."
+        logs = previewLogs.shuffled().flatMap { baseLog ->
+            (1..13).map { // ~50 total items
+                baseLog.copy(
+                    title = baseLog.title + " $it",
+                    id = it.toLong()
                 )
             }
+        }.shuffled() // Final shuffle for variety
     )

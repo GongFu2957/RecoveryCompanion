@@ -1,12 +1,15 @@
 package com.gongfu.recoverycompanion.logs.presentation.loglist
 
 import androidx.lifecycle.ViewModel
+import com.gongfu.recoverycompanion.logs.domain.use_case.LogUseCases
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-class LogListViewModel(): ViewModel() {
+class LogListViewModel(
+    private val logUseCases: LogUseCases
+): ViewModel() {
     private val _state = MutableStateFlow(LogListState())
     val state = _state.asStateFlow()
 
@@ -17,6 +20,8 @@ class LogListViewModel(): ViewModel() {
         when (action) {
             is LogListAction.CreateLog -> TODO()
             is LogListAction.OnLogClick -> TODO()
+            is LogListAction.OnFilterClick -> TODO()
+            is LogListAction.OnMoreMenuClick -> TODO()
         }
     }
 }
