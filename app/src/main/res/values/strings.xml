@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Recovery Companion</string>
     <string name="description_field">Description</string>
+    <string name="open_menu">Open Menu</string>
 </resources>

@@ -4,7 +4,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import kotlin.math.absoluteValue
 
 fun formatEpochMillis(epochMillis: Long): String {
     val instant = Instant.ofEpochMilli(epochMillis)

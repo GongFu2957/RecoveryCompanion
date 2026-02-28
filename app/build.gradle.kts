@@ -66,9 +66,12 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // Koin
     implementation(libs.bundles.koin)
+    // Room database
     implementation(libs.bundles.room)
-
+    //Extended Icons
+    implementation(libs.androidx.compose.material.icons.extended)
     // Temporary kapt instead of ksp
 
 }
