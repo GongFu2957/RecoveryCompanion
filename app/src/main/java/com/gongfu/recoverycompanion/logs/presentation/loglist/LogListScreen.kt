@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.TopBar
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.previewLog
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
@@ -31,6 +32,10 @@ fun LogEntryScreen(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        topBar = { TopBar(
+            onAction = {} ,
+            modifier = Modifier.fillMaxWidth()
+        )},
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { },

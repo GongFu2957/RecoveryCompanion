@@ -16,7 +16,6 @@ import com.gongfu.recoverycompanion.logs.presentation.loglist.components.preview
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -25,8 +24,8 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     LogEntryScreen(
                         state = previewLogListState,
-                        onAction = {},
-                        modifier = Modifier.padding(innerPadding)
+                        onAction =  { },
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }

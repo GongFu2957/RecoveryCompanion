@@ -101,8 +101,7 @@ private fun ProgressLinePreview() {
             )
         ) {
                 ProgressLine(
-                    value = 1f,
-                    valueRange = 0f..1f,
+                    value = 4f,
                     modifier = Modifier.fillMaxWidth(),
                     contentColor = if (isSystemInDarkTheme()) Color.White else Color.Black
                 )

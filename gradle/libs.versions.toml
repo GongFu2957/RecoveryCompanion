@@ -13,6 +13,7 @@ room = "2.8.4"
 ksp = "2.3.2"
 navigationRuntimeKtx = "2.9.7"
 material-icons-extended = "1.7.8"
+uiText = "1.10.3"
 
 
 [libraries]
@@ -38,6 +39,7 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
+androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 
 
 [plugins]
