@@ -4,5 +4,9 @@
     <string name="new_task">New Task</string>
     <string name="more_menu">More menu</string>
     <string name="filter_list">Filter list</string>
-    <string name="intensity_level">Intensity level</string>
+    <string name="intensity_level">Intensity Level</string>
+    <string name="log_entries">Log Entries</string>
+    <string name="delete">Delete</string>
+    <string name="date">Date</string>
+    <string name="settings">Settings</string>
 </resources>

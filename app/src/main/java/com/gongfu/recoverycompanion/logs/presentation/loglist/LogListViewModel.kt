@@ -20,8 +20,12 @@ class LogListViewModel(
         when (action) {
             is LogListAction.CreateLog -> TODO()
             is LogListAction.OnLogClick -> TODO()
-            is LogListAction.OnFilterClick -> TODO()
-            is LogListAction.OnMoreMenuClick -> TODO()
+            LogListAction.OnDeleteClick -> TODO()
+            LogListAction.OnSettingsClick -> TODO()
+            LogListAction.OnSortDateAscending -> TODO()
+            LogListAction.OnSortDateDescending -> TODO()
+            LogListAction.OnSortIntensityLevelAscending -> TODO()
+            LogListAction.OnSortIntensityLevelDescending -> TODO()
         }
     }
 }
