@@ -30,7 +30,10 @@ import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
+import com.gongfu.recoverycompanion.ui.theme.Poppins
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import com.gongfu.recoverycompanion.ui.theme.slipLog
+import com.gongfu.recoverycompanion.ui.theme.successLog
 import java.time.ZonedDateTime
 
 @Composable
@@ -41,6 +44,7 @@ fun LogEntryItem(
 ) {
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
+    /* temp until input is handled in the add/edit log screen */
     val maxTitleChars = 18
     val truncatedTitle = remember(log.title) {
         if (log.title.length <= maxTitleChars) {
@@ -58,7 +62,7 @@ fun LogEntryItem(
 
     ) {
         Icon(
-            imageVector = if (!log.outcome) Icons.Default.MoodBad else Icons.Default.Mood,
+            imageVector = if (!log.outcome) slipLog else successLog,
             contentDescription = "Icon",
             tint = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.size(50.dp)
