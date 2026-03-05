@@ -29,16 +29,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
+
+private val DEFAULT_RANGE = 1f..10f
 @Composable
 fun ProgressLine(
     value: Float,
     modifier: Modifier = Modifier,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..10f,
+    valueRange: ClosedFloatingPointRange<Float> = DEFAULT_RANGE,
     strokeThickness: Dp = 10.dp,
     contentColor: Color
 ) {
-    val progressFraction = (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
 
+    val progressFraction = (value - valueRange.start) / (valueRange.endInclusive - valueRange.start)
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,12 +48,12 @@ fun ProgressLine(
             .padding(5.dp)
             .fillMaxWidth(),
     ) {
-            Box(modifier = modifier.size(strokeThickness)) {
+            Box(modifier = Modifier.height(strokeThickness)) {
                 // Background track
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(colorScheme.primary.copy(.3f), RoundedCornerShape(strokeThickness / 2))
+                        .background(colorScheme.secondary.copy(.3f), RoundedCornerShape(strokeThickness))
                 )
 
                 // Active progress
@@ -59,14 +61,14 @@ fun ProgressLine(
                     modifier = Modifier
                         .fillMaxWidth(progressFraction.coerceIn(0f, 1f))
                         .fillMaxHeight()
-                        .background(colorScheme.primary, RoundedCornerShape(strokeThickness / 2))
+                        .background(colorScheme.secondary, RoundedCornerShape(strokeThickness))
                 )
         }
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
         ) {
-            repeat(11) { index ->
+            repeat(10) { index ->
                 Column {
                     Box(
                         modifier = Modifier

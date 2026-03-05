@@ -9,9 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Mood
-import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
-import com.gongfu.recoverycompanion.ui.theme.Poppins
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.slipLog
 import com.gongfu.recoverycompanion.ui.theme.successLog
@@ -140,18 +136,18 @@ internal val previewLog = LogEntry(
 internal val previewLog2 = LogEntry(
     id = 0,
     timestamp = timeStamp,
-    title = "I can't believe it happened again!",
+    title = "I keep running around in circles",
     description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
     trigger = "Procrastination",
     location = "Bathroom",
-    intensityLevel = 7,
+    intensityLevel = 10,
     bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
     outcome = false
 )
 internal val previewLog3 = LogEntry(
     id = 0,
     timestamp = timeStamp,
-    title = "Why!!!! AGAIN!",
+    title = "Another Dollar another day",
     description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
     trigger = "Procrastination",
     location = "Bathroom",
@@ -166,7 +162,7 @@ internal val previewLog4 = LogEntry(
     description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
     trigger = "Procrastination",
     location = "Bathroom",
-    intensityLevel = 3,
+    intensityLevel = 1,
     bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
     outcome = true
 )
