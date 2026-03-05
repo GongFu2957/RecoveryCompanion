@@ -7,7 +7,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun AddEditLogScreen(
     navController: NavController,
-    intensityLevel: Int,
+    state: AddEditLogState
 ) {
 
 }
