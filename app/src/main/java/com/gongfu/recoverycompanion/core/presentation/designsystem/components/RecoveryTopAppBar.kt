@@ -1,4 +1,4 @@
-package com.gongfu.recoverycompanion.logs.presentation.loglist.components
+package com.gongfu.recoverycompanion.core.presentation.designsystem.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -36,20 +36,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.gongfu.recoverycompanion.R
-import com.gongfu.recoverycompanion.ui.theme.LogoIcon
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.ui.theme.Poppins
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import com.gongfu.recoverycompanion.ui.theme.backArrowAlt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListTopAppBar(
+fun RecoveryTopAppBar(
+    showBackButton: Boolean,
     title: String,
     modifier: Modifier = Modifier,
     menuItems: List<DropDownItem> = emptyList(),
     filterItems: List<DropDownItem> = emptyList(),
     onFilterItemClick: (Int) -> Unit = {},
     onMenuItemClick: (Int) -> Unit = {},
+    onBackClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    startContent: (@Composable () -> Unit)? = null
 ) {
     var isFilterDropDownOpen by rememberSaveable {
         mutableStateOf(false)
@@ -65,11 +69,7 @@ fun ListTopAppBar(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = LogoIcon,
-                    contentDescription = "App Logo",
-                    tint = MaterialTheme.colorScheme.primary
-                )
+                startContent?.invoke()
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = title,
@@ -77,6 +77,17 @@ fun ListTopAppBar(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontFamily = Poppins
                 )
+            }
+        },
+        navigationIcon = {
+            if (showBackButton) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = backArrowAlt,
+                        contentDescription = stringResource(R.string.go_back),
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
+                }
             }
         },
         modifier = modifier,
@@ -167,9 +178,10 @@ fun ListTopAppBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @Composable
-private fun ListTopAppBarPreview() {
+private fun RecoveryTopAppBarPreview() {
     RecoveryCompanionTheme {
-        ListTopAppBar(
+        RecoveryTopAppBar(
+            showBackButton = true,
             title = "Log Entries",
             modifier = Modifier.fillMaxWidth(),
             menuItems = listOf(

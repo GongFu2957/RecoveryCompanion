@@ -41,7 +41,7 @@ fun LogEntryItem(
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
     /* temp until input is handled in the add/edit log screen */
-    val maxTitleChars = 18
+    val maxTitleChars = 30
     val truncatedTitle = remember(log.title) {
         if (log.title.length <= maxTitleChars) {
             log.title
@@ -52,24 +52,25 @@ fun LogEntryItem(
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
 
     ) {
         Icon(
             imageVector = if (!log.outcome) slipLog else successLog,
             contentDescription = "Icon",
-            tint = MaterialTheme.colorScheme.secondary,
-            modifier = Modifier.size(50.dp)
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(70.dp)
         )
         Column(
             modifier = Modifier.weight(1f)
         ) {
             Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier.fillMaxWidth()
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
                     Text(
@@ -78,24 +79,30 @@ fun LogEntryItem(
                         fontSize = 20.sp,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
-                        color = contentColor,
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
-                    Text(
-                        text = stringResource(R.string.intensity_level),
-                        fontWeight = FontWeight.Light,
-                        fontSize = 10.sp,
-                        color = contentColor.copy(alpha = .8f),
-                        letterSpacing = .5.sp,
-
-                    )
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = stringResource(R.string.intensity_level),
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp,
+                            lineHeight = 14.sp,
+                            color = contentColor.copy(alpha = .7f),
+                            )
+                        Text(
+                            text = formatEpochMillis(log.timestamp),
+                            fontWeight = FontWeight.Light,
+                            fontStyle = FontStyle.Italic,
+                            fontSize = 11.sp,
+                            lineHeight = 13.sp,
+                            color = contentColor.copy(alpha = .6f)
+                        )
+                    }
                 }
-                Text(
-                    text = formatEpochMillis(log.timestamp),
-                    fontWeight = FontWeight.Light,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 9.sp,
-                    color = contentColor
-                )
             }
             ProgressLine(
                 value = log.intensityLevel.toFloat(),
@@ -106,13 +113,17 @@ fun LogEntryItem(
     }
 }
 
-
 @PreviewLightDark
 @Composable
 private fun LogEntryItemPreview() {
     RecoveryCompanionTheme {
         LogEntryItem(
-            log = previewLog,
+            log = LogEntry(
+                id = 0, timestamp = timeStamp, title = "Woke up late again, I can'tbe",
+                description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
+                trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
+                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false
+            ),
             onClick = { /* TO DO */ },
             modifier = Modifier.background(
                 MaterialTheme.colorScheme.background
@@ -122,48 +133,3 @@ private fun LogEntryItemPreview() {
 }
 
 internal val timeStamp = ZonedDateTime.now().toInstant().toEpochMilli()
-internal val previewLog = LogEntry(
-        id = 0,
-        timestamp = timeStamp,
-        title = "Hello world!",
-        description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
-        trigger = "Procrastination",
-        location = "Bathroom",
-        intensityLevel = 4,
-        bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
-        outcome = true
-)
-internal val previewLog2 = LogEntry(
-    id = 0,
-    timestamp = timeStamp,
-    title = "I keep running around in circles",
-    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
-    trigger = "Procrastination",
-    location = "Bathroom",
-    intensityLevel = 10,
-    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
-    outcome = false
-)
-internal val previewLog3 = LogEntry(
-    id = 0,
-    timestamp = timeStamp,
-    title = "Another Dollar another day",
-    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
-    trigger = "Procrastination",
-    location = "Bathroom",
-    intensityLevel = 6,
-    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
-    outcome = false
-)
-internal val previewLog4 = LogEntry(
-    id = 0,
-    timestamp = timeStamp,
-    title = "HUGE WIN",
-    description = """I had a lot of extra time to work on my stuff today. But I didn't use my time like I should have. I was going to really try a lot harder this time, but it just got the best of me. I didn't know what to do in the moment.""".trimMargin(),
-    trigger = "Procrastination",
-    location = "Bathroom",
-    intensityLevel = 1,
-    bodyResponse = "Felt a sense of uneasiness and a little bit of shaking anxiety.",
-    outcome = true
-)
-

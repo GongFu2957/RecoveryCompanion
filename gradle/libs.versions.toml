@@ -14,6 +14,8 @@ ksp = "2.3.2"
 navigationRuntimeKtx = "2.9.7"
 material-icons-extended = "1.7.8"
 uiText = "1.10.3"
+navigationCompose = "2.9.7"
+material3 = "1.4.0"
 
 
 [libraries]
@@ -40,6 +42,12 @@ room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
 androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
+
+
 
 
 [plugins]
@@ -53,6 +61,18 @@ koin = [
     "koin-core",
     "koin-android",
     "koin-androidx-compose"
+]
+compose = [
+    "androidx-activity-compose",
+    "androidx-lifecycle-viewmodel-compose",
+    "androidx-compose-material3",
+    "androidx-compose-ui",
+    "androidx-compose-ui-graphics",
+    "androidx-compose-material-icons-extended",
+    "androidx-navigation-compose",
+    "androidx-compose-ui-tooling-preview",
+    "androidx-compose-ui-text",
+    "androidx-lifecycle-runtime-compose"
 ]
 
 room = [

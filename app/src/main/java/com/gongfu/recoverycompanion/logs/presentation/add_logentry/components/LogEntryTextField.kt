@@ -1,10 +1,11 @@
-package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components
+package com.gongfu.recoverycompanion.logs.presentation.add_logentry.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -25,10 +26,9 @@ import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 @Composable
 fun LogEntryTextField(
     label: String,
-    value: String,
-    onValueChange: (String) -> Unit,
-    error: String?,
-    modifier: Modifier = Modifier
+    state: TextFieldState,
+    modifier: Modifier = Modifier,
+    error: String? = null,
     ) {
     var isFieldFocused by remember { mutableStateOf(false) }
 
@@ -42,9 +42,8 @@ fun LogEntryTextField(
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
-                value = value,
-                onValueChange = onValueChange,
-                label = { Text(label) },
+                state = state,
+                label = { Text(text = label) },
                 isError = error != null,
                 supportingText = {
                     error?.let {
@@ -68,20 +67,19 @@ fun LogEntryTextField(
                     else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.04f),
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
 
-                ),
+                    ),
             )
-            }
         }
+    }
 }
 
-@Preview
+@Preview(showBackground = false)
 @Composable
 private fun LogEntryTextFieldPreview() {
     RecoveryCompanionTheme {
         LogEntryTextField(
             label = "Title",
-            value = "",
-            onValueChange = {},
+            state = TextFieldState(),
             error = null,
             modifier = Modifier.fillMaxWidth()
         )

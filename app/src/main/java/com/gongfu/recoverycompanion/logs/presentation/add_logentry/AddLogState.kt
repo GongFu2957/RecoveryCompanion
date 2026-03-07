@@ -1,8 +1,8 @@
-package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
+package com.gongfu.recoverycompanion.logs.presentation.add_logentry
 
 import androidx.compose.foundation.text.input.TextFieldState
 
-data class AddEditLogState(
+data class AddLogState(
     val title: TextFieldState = TextFieldState(),
     val description: TextFieldState = TextFieldState(),
     val trigger: TextFieldState = TextFieldState(),

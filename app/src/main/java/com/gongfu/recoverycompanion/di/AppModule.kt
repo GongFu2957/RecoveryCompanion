@@ -10,6 +10,7 @@ import com.gongfu.recoverycompanion.logs.domain.use_case.DeleteLog
 import com.gongfu.recoverycompanion.logs.domain.use_case.GetLog
 import com.gongfu.recoverycompanion.logs.domain.use_case.GetLogs
 import com.gongfu.recoverycompanion.logs.domain.use_case.LogUseCases
+import com.gongfu.recoverycompanion.logs.presentation.add_logentry.AddLogViewModel
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
@@ -40,4 +41,5 @@ val appModule = module {
 
     //Presentation Layer
     viewModelOf(::LogListViewModel)
+    viewModelOf(::AddLogViewModel)
 }
