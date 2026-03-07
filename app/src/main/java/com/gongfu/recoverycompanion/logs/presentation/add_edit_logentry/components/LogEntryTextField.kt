@@ -1,10 +1,11 @@
-package com.gongfu.recoverycompanion.logs.presentation.add_logentry.components
+package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ fun LogEntryTextField(
     label: String,
     state: TextFieldState,
     modifier: Modifier = Modifier,
+    lineLimits: TextFieldLineLimits = TextFieldLineLimits.SingleLine,
     error: String? = null,
     ) {
     var isFieldFocused by remember { mutableStateOf(false) }
@@ -61,6 +63,7 @@ fun LogEntryTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged { isFieldFocused = it.isFocused },
+                lineLimits = lineLimits,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = if (isFieldFocused)
                         MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.08f)

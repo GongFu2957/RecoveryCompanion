@@ -1,11 +1,5 @@
-package com.gongfu.recoverycompanion.navigation
+package com.gongfu.recoverycompanion.core.navigation
 
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -13,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.gongfu.recoverycompanion.logs.presentation.add_logentry.AddLogScreenRoot
+import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.AddEditLogScreenRoot
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListScreenRoot
 import com.gongfu.recoverycompanion.logs.presentation.utils.LogDestinations
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
@@ -38,7 +32,7 @@ fun NavigationRoot() {
 
                 //AddLogScreen
                 composable(LogDestinations.AddLog.route) {
-                    AddLogScreenRoot(
+                    AddEditLogScreenRoot(
                         onBack = { navController.popBackStack() }
                     )
                 }

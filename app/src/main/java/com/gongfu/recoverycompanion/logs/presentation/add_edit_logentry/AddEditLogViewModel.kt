@@ -1,4 +1,4 @@
-package com.gongfu.recoverycompanion.logs.presentation.add_logentry
+package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
 import androidx.lifecycle.ViewModel
 import com.gongfu.recoverycompanion.logs.domain.use_case.LogUseCases
@@ -8,19 +8,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-class AddLogViewModel(
+class AddEditLogViewModel(
     private val logUseCases: LogUseCases
 ): ViewModel() {
-    private val _state = MutableStateFlow(AddLogState())
+    private val _state = MutableStateFlow(AddEditLogState())
     val state = _state.asStateFlow()
 
     private val _events = Channel<LogListEvent>()
     val events = _events.receiveAsFlow()
 
-    fun onAction(action: AddLogAction) {
+    fun onAction(action: AddEditLogAction) {
         when (action) {
-            AddLogAction.OnBackClick -> Unit
-            AddLogAction.OnSaveClick -> TODO()
+            AddEditLogAction.OnBackClick -> Unit
+            AddEditLogAction.OnSaveClick -> TODO()
         }
     }
 }
