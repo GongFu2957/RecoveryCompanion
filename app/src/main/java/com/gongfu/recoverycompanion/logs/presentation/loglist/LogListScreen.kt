@@ -60,7 +60,7 @@ fun LogListScreenRoot(
                 else -> Unit
             }
             viewModel.onAction(action)
-        }
+        },
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)
