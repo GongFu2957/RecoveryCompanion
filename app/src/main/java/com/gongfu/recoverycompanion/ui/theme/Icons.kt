@@ -24,3 +24,7 @@ val backArrow: ImageVector
 val backArrowAlt: ImageVector
     @Composable
     get() = ImageVector.vectorResource(R.drawable.arrow_back_ios_new_24px)
+
+val helpQuestion: ImageVector
+    @Composable
+    get() = ImageVector.vectorResource((R.drawable.help_24dp_e3e3e3_fill0_wght400_grad0_opsz24))
