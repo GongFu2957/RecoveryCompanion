@@ -41,12 +41,12 @@ fun LogEntryItem(
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
     /* temp until input is handled in the add/edit log screen */
-    val maxTitleChars = 30
+    val maxTitleCharCount = 27
     val truncatedTitle = remember(log.title) {
-        if (log.title.length <= maxTitleChars) {
+        if (log.title.length <= maxTitleCharCount) {
             log.title
         } else {
-            "${log.title.take(maxTitleChars)}..."
+            "${log.title.take(maxTitleCharCount)}..."
         }
     }
     Row(

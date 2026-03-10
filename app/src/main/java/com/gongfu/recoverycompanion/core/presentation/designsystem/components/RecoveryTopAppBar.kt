@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
@@ -139,7 +140,11 @@ fun RecoveryTopAppBar(
                        expanded = isDropDownMenuOpen,
                        onDismissRequest = {
                            isDropDownMenuOpen = false
-                       }
+                       },
+                       shape = RoundedCornerShape(12.dp),
+                       containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                       tonalElevation = 2.dp,
+                       shadowElevation = 4.dp
                    ) {
                        menuItems.forEachIndexed { index, item ->
                            Row(

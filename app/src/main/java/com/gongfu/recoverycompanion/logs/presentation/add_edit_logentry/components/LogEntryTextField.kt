@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
@@ -83,7 +82,6 @@ fun LogEntryTextField(
                                     expandedHelp = true
                                     onHelpClick?.invoke()
                                 },
-                                modifier = Modifier.padding(end = 8.dp)
                             ) {
                                 Icon(
                                     imageVector = icon,
@@ -122,6 +120,7 @@ fun LogEntryTextField(
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .widthIn(max = 350.dp)
                     .onFocusChanged { isFieldFocused = it.isFocused },
                 lineLimits = lineLimits,
                 colors = OutlinedTextFieldDefaults.colors(

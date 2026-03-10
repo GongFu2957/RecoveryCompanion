@@ -20,4 +20,5 @@
     <string name="add_log_healthy_outcome">Healthy Outcome?</string>
     <string name="add_log_save">Save Log</string>
     <string name="help_text">Help Text</string>
+    <string name="new_log_entry">New Log Entry</string>
 </resources>

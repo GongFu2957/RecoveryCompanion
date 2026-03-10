@@ -2,14 +2,15 @@ package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -75,17 +75,27 @@ fun AddEditLogScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState
     )
+    val maxTitleCharCount = 27
+    val titleLength = state.title.text.length
+    val truncatedTitle = if (titleLength <= maxTitleCharCount) {
+        "${state.title.text}"
+    } else {
+        "${state.title.text.take(maxTitleCharCount)}..."
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             RecoveryTopAppBar(
                 showBackButton = true,
                 //placeholder
-                title = "New Log Entry!",
+                title = if (state.logId == null) {
+                    stringResource(R.string.new_log_entry)
+                } else truncatedTitle,
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )
-        }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { innerPadding ->
         LazyColumn(  // Scrollable form
             modifier = Modifier
@@ -100,7 +110,6 @@ fun AddEditLogScreen(
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_title),
                     state = state.title,
-                    error = null,
                 )
                 // Description
                 LogEntryTextField(
@@ -111,21 +120,21 @@ fun AddEditLogScreen(
                         maxHeightInLines = 4
                     ),
                     endIcon = helpQuestion,
-                    helpText = "This is mainly where you put all of the nitty gritty details In this place."
+                    helpText = "This is where you put all the details related to your Log. Whether that be the steps leading up to it, thought patterns, or your feelings about it afterwards. Being more detailed will help you find patterns easier.",
                 )
 
                 // Trigger
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_trigger),
                     state = state.trigger,
-                    error = null,
+                    endIcon = helpQuestion,
+                    helpText = "A trigger is a cue that primes your mind and body to respond in a specific way."
                 )
 
                 // Location
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_location),
                     state = state.location,
-                    error = null,
                 )
 
                 // Intensity Level (Slider or picker - placeholder)
@@ -180,12 +189,15 @@ fun AddEditLogScreen(
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_body_response),
                     state = state.bodyResponse,
-                    error = null,
+                    endIcon = helpQuestion,
+                    helpText = ""
                 )
 
                 // Outcome Toggle
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -215,8 +227,10 @@ fun AddEditLogScreen(
 }
 
 private val previewLogState = AddEditLogState(
-    title = TextFieldState(initialText = "Morning routine win"),
-    description = TextFieldState(initialText = "Woke up on time, meditated, exercised"),
+    logId = 11221,
+    title = TextFieldState(initialText = "Morning routine win. GOD IS ON THE MOVE WOOHOO"),
+    description = TextFieldState(initialText = "Woke up on time, meditated, exercised. Honestly was feeling " +
+            "really good and really well rested. I prayed for 45 million seconds and just let God do his wonderful work in my heart."),
     trigger = TextFieldState(initialText = "Good sleep"),
     location = TextFieldState(initialText = "Home"),
     intensityLevel = 3,
