@@ -5,11 +5,6 @@ import com.gongfu.recoverycompanion.logs.data.data_source.LogDatabase
 import com.gongfu.recoverycompanion.logs.data.data_source.LogEntryDao
 import com.gongfu.recoverycompanion.logs.data.repository.LogRepositoryImpl
 import com.gongfu.recoverycompanion.logs.domain.repository.LogRepository
-import com.gongfu.recoverycompanion.logs.domain.use_case.AddLog
-import com.gongfu.recoverycompanion.logs.domain.use_case.DeleteLog
-import com.gongfu.recoverycompanion.logs.domain.use_case.GetLog
-import com.gongfu.recoverycompanion.logs.domain.use_case.GetLogs
-import com.gongfu.recoverycompanion.logs.domain.use_case.LogUseCases
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.AddEditLogViewModel
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListViewModel
 import org.koin.android.ext.koin.androidContext
@@ -28,16 +23,6 @@ val appModule = module {
     }
     single<LogEntryDao> { get<LogDatabase>().logEntryDao }
     single<LogRepository> { LogRepositoryImpl(get()) }
-
-    //Domain Layer
-    single {
-        LogUseCases(
-            getLogs = GetLogs(get()),
-            deleteLog = DeleteLog(get()),
-            addLog = AddLog(get()),
-            getLog = GetLog(get())
-        )
-    }
 
     //Presentation Layer
     viewModelOf(::LogListViewModel)

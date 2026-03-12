@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
+import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListEvent
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.Typography
 import com.gongfu.recoverycompanion.ui.theme.helpQuestion
@@ -52,12 +54,20 @@ fun AddEditLogScreenRoot(
     viewModel: AddEditLogViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val events by viewModel.events.collectAsStateWithLifecycle()
+    LaunchedEffect(events) {
+        events.collect { event ->
+            when(event) {
+                LogListEvent.Error() -> onBack()
+            }
+        }
+    }
     AddEditLogScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                is AddEditLogAction.OnBackClick -> onBack()
-                is AddEditLogAction.OnSaveClick -> Unit
+                AddEditLogAction.OnBackClick -> onBack()
+                else -> viewModel.onAction(action)
             }
         }
     )
@@ -75,12 +85,17 @@ fun AddEditLogScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState
     )
+    val titleState = rememberTextFieldState()
+    val descriptionState = rememberTextFieldState()
+    val triggerState = rememberTextFieldState()
+    val locationState = rememberTextFieldState()
+    val bodyResponseState = rememberTextFieldState()
+
     val maxTitleCharCount = 27
-    val titleLength = state.title.text.length
-    val truncatedTitle = if (titleLength <= maxTitleCharCount) {
-        "${state.title.text}"
+    val truncatedTitle = if (titleState.text.length <= maxTitleCharCount) {
+        titleState.text.toString()
     } else {
-        "${state.title.text.take(maxTitleCharCount)}..."
+        titleState.text.take(maxTitleCharCount)
     }
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -90,7 +105,7 @@ fun AddEditLogScreen(
                 //placeholder
                 title = if (state.logId == null) {
                     stringResource(R.string.new_log_entry)
-                } else truncatedTitle,
+                } else titleState.text.toString(),
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )
@@ -109,32 +124,36 @@ fun AddEditLogScreen(
                 // Title
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_title),
-                    state = state.title,
+                    state = titleState,
+                    error = state.fieldErrors[LogField.TITLE]
                 )
                 // Description
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_description),
-                    state = state.description,
+                    state = descriptionState,
                     lineLimits = TextFieldLineLimits.MultiLine(
                         minHeightInLines = 4,
                         maxHeightInLines = 4
                     ),
                     endIcon = helpQuestion,
                     helpText = "This is where you put all the details related to your Log. Whether that be the steps leading up to it, thought patterns, or your feelings about it afterwards. Being more detailed will help you find patterns easier.",
+                    error = state.fieldErrors[LogField.DESCRIPTION]
                 )
 
                 // Trigger
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_trigger),
-                    state = state.trigger,
+                    state = triggerState,
                     endIcon = helpQuestion,
-                    helpText = "A trigger is a cue that primes your mind and body to respond in a specific way."
+                    helpText = "A trigger is a cue that primes your mind and body to respond in a specific way.",
+                    error = state.fieldErrors[LogField.TRIGGER]
                 )
 
                 // Location
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_location),
-                    state = state.location,
+                    state = locationState,
+                    error = state.fieldErrors[LogField.LOCATION]
                 )
 
                 // Intensity Level (Slider or picker - placeholder)
@@ -188,9 +207,10 @@ fun AddEditLogScreen(
                 // Body Response
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_body_response),
-                    state = state.bodyResponse,
+                    state = bodyResponseState,
                     endIcon = helpQuestion,
-                    helpText = ""
+                    helpText = "",
+                    error = state.fieldErrors[LogField.BODY_RESPONSE]
                 )
 
                 // Outcome Toggle
@@ -212,14 +232,28 @@ fun AddEditLogScreen(
                 }
                 // Save Button
                 Button(
-                    onClick = { onAction(AddEditLogAction.OnSaveClick) },
+                    onClick = { onAction(AddEditLogAction.OnSaveClick(
+                        title = titleState.toString(),
+                        description = descriptionState.toString(),
+                        trigger = triggerState.toString(),
+                        location = locationState.toString(),
+                        bodyResponse = bodyResponseState.toString(),
+                        intensityLevel = state.intensityLevel,
+                        outcome = state.outcome
+                        )) },
                     modifier = Modifier
                         .padding(top = 24.dp),
                     enabled = !state.isSavingLog
                 ) {
-                    Text(
-                        text = stringResource(R.string.add_log_save)
-                    )
+                    if (!state.isSavingLog) {
+                        Text(
+                            text = stringResource(R.string.add_log_save)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.add_log_saving)
+                        )
+                    }
                 }
             }
         }
@@ -227,16 +261,10 @@ fun AddEditLogScreen(
 }
 
 private val previewLogState = AddEditLogState(
-    logId = 11221,
-    title = TextFieldState(initialText = "Morning routine win. GOD IS ON THE MOVE WOOHOO"),
-    description = TextFieldState(initialText = "Woke up on time, meditated, exercised. Honestly was feeling " +
-            "really good and really well rested. I prayed for 45 million seconds and just let God do his wonderful work in my heart."),
-    trigger = TextFieldState(initialText = "Good sleep"),
-    location = TextFieldState(initialText = "Home"),
-    intensityLevel = 3,
-    bodyResponse = TextFieldState(initialText = "Energized, clear-headed"),
+    logId = null,
+    intensityLevel = 5,
     outcome = true,
-    isSavingLog = false
+    isSavingLog = true,
 )
 
 private val previewLogStateEmpty = AddEditLogState()

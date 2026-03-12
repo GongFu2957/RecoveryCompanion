@@ -2,10 +2,10 @@ package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gongfu.recoverycompanion.logs.domain.model.InvalidLogException
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
-import com.gongfu.recoverycompanion.logs.domain.use_case.LogUseCases
+import com.gongfu.recoverycompanion.logs.domain.repository.LogRepository
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListEvent
-import com.gongfu.recoverycompanion.logs.presentation.utils.currentTimeToEpochMillis
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddEditLogViewModel(
-    private val logUseCases: LogUseCases
+    private val logRepository: LogRepository
 ): ViewModel() {
     private val _state = MutableStateFlow(AddEditLogState())
     val state = _state.asStateFlow()
@@ -24,28 +24,72 @@ class AddEditLogViewModel(
 
     fun onAction(action: AddEditLogAction) {
         when (action) {
-            AddEditLogAction.OnBackClick -> Unit
-            AddEditLogAction.OnSaveClick -> saveLog()
+            is AddEditLogAction.OnBackClick -> Unit
+            is AddEditLogAction.OnSaveClick -> onSaveClicked(
+            title = action.title,
+            description = action.description,
+            trigger = action.trigger,
+            location = action.location,
+            bodyResponse = action.bodyResponse,
+            intensityLevel = action.intensityLevel,
+            outcome = action.outcome
+        )
+            is AddEditLogAction.IntensityChanged -> {
+                _state.update { it.copy(intensityLevel = action.level) }
+            }
+            is AddEditLogAction.OutcomeChanged -> {
+                _state.update { it.copy(outcome = action.outcome) }
+            }
         }
     }
 
-    private fun saveLog() {
+    fun onSaveClicked(
+        title: String,
+        description: String,
+        trigger: String,
+        location: String,
+        bodyResponse: String,
+        intensityLevel: Int,
+        outcome: Boolean
+    ) {
+        val errors = buildMap<LogField, String> {
+            if (title.isBlank()) put(LogField.TITLE, "Title cannot be empty")
+            if (description.isBlank()) put(LogField.DESCRIPTION, "Description cannot be empty")
+            if (trigger.isBlank()) put(LogField.TRIGGER, "Trigger cannot be empty")
+            if (location.isBlank()) put(LogField.LOCATION, "Location cannot be empty")
+        }
+
+        if (errors.isNotEmpty()) {
+            _state.update { it.copy(fieldErrors = errors, isSavingLog = false) }
+            return
+        }
+
+        _state.update { it.copy(isSavingLog = true, fieldErrors = emptyMap()) }
+
         viewModelScope.launch {
-            _state.update { it.copy(isSavingLog = true) }
-            logUseCases.addLog(
-                LogEntry(
-                    id = 0L,
-                    timestamp = currentTimeToEpochMillis(),
-                    title = "${_state.value.title.text}",
-                    description = "${_state.value.description.text}",
-                    trigger = "${_state.value.trigger.text}",
-                    location = "${_state.value.location.text}",
-                    intensityLevel = _state.value.intensityLevel,
-                    bodyResponse = "${_state.value.bodyResponse.text}",
-                    outcome = _state.value.outcome
-                )
+            val log = LogEntry(
+                id = state.value.logId ?: 0L,
+                timestamp = System.currentTimeMillis(),
+                title = title,
+                description = description,
+                trigger = trigger,
+                location = location,
+                intensityLevel = intensityLevel,
+                bodyResponse = bodyResponse,
+                outcome = outcome
             )
-            _state.update { it.copy(isSavingLog = false) }
+            logRepository.insertLog(log)
+                .onSuccess { insertLog ->
+                    _events.send(LogListEvent.Sa)  // or success event
+                }
+                .onError { error ->
+                    _state.update {
+                        it.copy(
+                            fieldErrors = emptyMap(),
+                            isSavingLog = false
+                        )
+                    }
+                }
         }
     }
-}
+
