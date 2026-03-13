@@ -21,5 +21,7 @@
     <string name="add_log_save">Save Log</string>
     <string name="help_text">Help Text</string>
     <string name="new_log_entry">New Log Entry</string>
-    <string name="add_log_saving">Saving...</string>
+    <string name="add_log_saving">Saving…</string>
+    <string name="add_log_save_error">Oh no! Failed to save the Log!</string>
+    <string name="add_log_save_successful">Log Successfully Saved!</string>
 </resources>

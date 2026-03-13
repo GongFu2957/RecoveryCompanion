@@ -1,5 +1,6 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,10 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,7 +25,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -32,6 +35,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -42,7 +46,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
-import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListEvent
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.Typography
 import com.gongfu.recoverycompanion.ui.theme.helpQuestion
@@ -54,19 +57,33 @@ fun AddEditLogScreenRoot(
     viewModel: AddEditLogViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val events by viewModel.events.collectAsStateWithLifecycle()
-    LaunchedEffect(events) {
-        events.collect { event ->
-            when(event) {
-                LogListEvent.Error() -> onBack()
+    val context = LocalContext.current
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is AddEditLogEvent.ShowSaveError -> {
+                    Toast.makeText(
+                        context,
+                        event.error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is AddEditLogEvent.ShowSaveSuccessful -> {
+                    Toast.makeText(
+                        context,
+                        event.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
+
         }
     }
     AddEditLogScreen(
         state = state,
         onAction = { action ->
             when (action) {
-                AddEditLogAction.OnBackClick -> onBack()
+                AddEditLogAction.OnBackClick -> if (!state.isSavingLog) onBack()
                 else -> viewModel.onAction(action)
             }
         }
@@ -91,31 +108,25 @@ fun AddEditLogScreen(
     val locationState = rememberTextFieldState()
     val bodyResponseState = rememberTextFieldState()
 
-    val maxTitleCharCount = 27
-    val truncatedTitle = if (titleState.text.length <= maxTitleCharCount) {
-        titleState.text.toString()
-    } else {
-        titleState.text.take(maxTitleCharCount)
-    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             RecoveryTopAppBar(
                 showBackButton = true,
                 //placeholder
-                title = if (state.logId == null) {
-                    stringResource(R.string.new_log_entry)
-                } else titleState.text.toString(),
+                title = stringResource(R.string.new_log_entry),
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )
         },
         contentWindowInsets = WindowInsets.safeDrawing
-    ) { innerPadding ->
+    ) { scaffoldPadding ->
         LazyColumn(  // Scrollable form
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(scaffoldPadding)
+                .consumeWindowInsets(scaffoldPadding)
+                .windowInsetsPadding(WindowInsets.ime),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(16.dp)
@@ -176,11 +187,12 @@ fun AddEditLogScreen(
                             style = Typography.labelMedium,
                         )
                         Slider(
-                            state = SliderState(
-                                value = state.intensityLevel.toFloat(),
-                                valueRange = 1f..10f,
-                                steps = 8
-                            ),
+                            value = state.intensityLevel.toFloat(),
+                            onValueChange = { newIntensityLevel ->
+                                onAction(AddEditLogAction.IntensityChanged(newIntensityLevel.toInt()))
+                            },
+                            valueRange = 1f..10f,
+                            steps = 8
                         )
 
                        // Steps labels
@@ -227,17 +239,19 @@ fun AddEditLogScreen(
                     )
                     Switch(
                         checked = state.outcome,
-                        onCheckedChange = null,
+                        onCheckedChange = { newOutcome ->
+                            onAction(AddEditLogAction.OutcomeChanged(newOutcome))
+                        },
                     )
                 }
                 // Save Button
                 Button(
                     onClick = { onAction(AddEditLogAction.OnSaveClick(
-                        title = titleState.toString(),
-                        description = descriptionState.toString(),
-                        trigger = triggerState.toString(),
-                        location = locationState.toString(),
-                        bodyResponse = bodyResponseState.toString(),
+                        title = titleState.text.toString(),
+                        description = descriptionState.text.toString(),
+                        trigger = triggerState.text.toString(),
+                        location = locationState.text.toString(),
+                        bodyResponse = bodyResponseState.text.toString(),
                         intensityLevel = state.intensityLevel,
                         outcome = state.outcome
                         )) },

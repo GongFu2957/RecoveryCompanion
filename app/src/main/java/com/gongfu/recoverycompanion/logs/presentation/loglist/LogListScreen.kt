@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -28,12 +27,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.core.tmp.previewLogList
@@ -50,12 +50,12 @@ fun LogListScreenRoot(
     onAddLogClick: () -> Unit,
     viewModel: LogListViewModel = koinViewModel(),
     ) {
-//    val state by viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val testState = LogListState(
         logs = previewLogList
     )
     LogListScreen(
-        state = testState,
+        state = state,
         onAction = { action ->
             when (action) {
                 is LogListAction.CreateLog -> onAddLogClick()

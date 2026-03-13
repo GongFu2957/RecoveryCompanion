@@ -33,7 +33,7 @@ fun NavigationRoot() {
                 //AddLogScreen
                 composable(LogDestinations.AddLog.route) {
                     AddEditLogScreenRoot(
-                        onBack = { navController.popBackStack() }
+                        onBack = { navController.navigateUp() }
                     )
                 }
 

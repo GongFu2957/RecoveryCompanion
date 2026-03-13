@@ -1,6 +1,6 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
 sealed interface AddEditLogEvent {
-    data class Error(val error: String) : AddEditLogEvent
-    data object SaveSuccessful : AddEditLogEvent
+    data class ShowSaveSuccessful(val message: Int) : AddEditLogEvent
+    data class ShowSaveError(val error: Int) : AddEditLogEvent
 }

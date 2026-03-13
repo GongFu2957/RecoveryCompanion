@@ -11,5 +11,3 @@ data class LogEntry(
     val bodyResponse: String,
     val outcome: Boolean
 )
-
-class InvalidLogException(message: String) : Exception(message)
