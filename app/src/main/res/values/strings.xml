@@ -24,4 +24,7 @@
     <string name="add_log_saving">Saving…</string>
     <string name="add_log_save_error">Oh no! Failed to save the Log!</string>
     <string name="add_log_save_successful">Log Successfully Saved!</string>
+    <string name="failed_to_fetch_logs">Something happened! Failed to fetch logs!</string>
+    <string name="failed_to_fetch_log">Something happened! Failed to fetch log!</string>
+    <string name="failed_to_load_log">Oh no! Log Failed to Load!</string>
 </resources>

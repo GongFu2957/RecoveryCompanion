@@ -7,5 +7,5 @@ import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 data class LogListState(
     val isLoading: Boolean = false,
     val logs: List<LogEntry> = emptyList(),
-    val selectedLog: LogEntry? = null
+    val selectedLogById: Long?  = null
 )

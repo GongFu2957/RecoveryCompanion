@@ -1,5 +1,6 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gongfu.recoverycompanion.R
@@ -13,13 +14,23 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddEditLogViewModel(
-    private val logRepository: LogRepository
+    private val logRepository: LogRepository,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _state = MutableStateFlow(AddEditLogState())
     val state = _state.asStateFlow()
 
     private val _events = Channel<AddEditLogEvent>()
     val events = _events.receiveAsFlow()
+
+    init {
+        savedStateHandle.get<String>("logId")?.let { logIdStr ->
+            val logId = logIdStr.toLongOrNull()
+            if (logId != null) {
+                loadExistingLog(logId)
+            }
+        }
+    }
 
     fun onAction(action: AddEditLogAction) {
         when (action) {
@@ -47,6 +58,21 @@ class AddEditLogViewModel(
         }
     }
 
+    private fun loadExistingLog(logId: Long?) {
+        if (logId == null) return
+
+        viewModelScope.launch {
+            try {
+                val existingLog = logRepository.getLogById(logId)
+                existingLog?.let { log ->
+                    _state.update { it.copy(selectedLog = log) }
+                }
+            } catch (e: Exception) {
+                _events.send(AddEditLogEvent.Error(R.string.failed_to_load_log))
+                TODO("Implement Catching exception with Timber Logging")
+            }
+        }
+    }
     fun onSaveClicked(
         title: String,
         description: String,
@@ -86,8 +112,10 @@ class AddEditLogViewModel(
                 )
                 logRepository.insertLog(log)
                 _events.send(AddEditLogEvent.ShowSaveSuccessful(R.string.add_log_save_successful))
+                _events.send(AddEditLogEvent.NavigateBack)
             } catch (e: Exception) {
                 _events.send(AddEditLogEvent.ShowSaveError(R.string.add_log_save_error))
+                TODO("Implement Catching exception with Timber Logging")
             } finally {
                 _state.update { it.copy(isSavingLog = false) }
             }

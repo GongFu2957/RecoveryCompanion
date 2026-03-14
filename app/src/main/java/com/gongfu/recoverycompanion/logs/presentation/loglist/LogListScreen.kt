@@ -1,5 +1,6 @@
 package com.gongfu.recoverycompanion.logs.presentation.loglist
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,9 +28,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -48,21 +51,38 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LogListScreenRoot(
     onAddLogClick: () -> Unit,
+    onLogClick: (Long) -> Unit,
     viewModel: LogListViewModel = koinViewModel(),
     ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val testState = LogListState(
         logs = previewLogList
     )
+    val context = LocalContext.current
+    LaunchedEffect(viewModel.events) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is LogListEvent.Error -> {
+                    Toast.makeText(
+                        context,
+                        event.error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
     LogListScreen(
         state = state,
         onAction = { action ->
+            viewModel.onAction(action)
             when (action) {
                 is LogListAction.CreateLog -> onAddLogClick()
-                else -> Unit
+                is LogListAction.OnLogClick -> onLogClick(action.logId)
+                else -> {}
             }
-            viewModel.onAction(action)
-        },
+        }
     )
 }
 @OptIn(ExperimentalMaterial3Api::class)

@@ -1,5 +1,7 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
+import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+
 sealed interface AddEditLogAction {
     data class OnSaveClick(
         val title: String,

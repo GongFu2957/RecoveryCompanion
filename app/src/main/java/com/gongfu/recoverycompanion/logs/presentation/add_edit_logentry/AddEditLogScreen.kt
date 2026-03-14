@@ -61,6 +61,13 @@ fun AddEditLogScreenRoot(
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->
             when (event) {
+                is AddEditLogEvent.Error -> {
+                    Toast.makeText(
+                        context,
+                        event.error,
+                        Toast.LENGTH_LONG
+                    )
+                }
                 is AddEditLogEvent.ShowSaveError -> {
                     Toast.makeText(
                         context,
@@ -75,10 +82,12 @@ fun AddEditLogScreenRoot(
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                is AddEditLogEvent.NavigateBack -> onBack()
             }
 
         }
     }
+
     AddEditLogScreen(
         state = state,
         onAction = { action ->
@@ -102,11 +111,21 @@ fun AddEditLogScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState
     )
-    val titleState = rememberTextFieldState()
-    val descriptionState = rememberTextFieldState()
-    val triggerState = rememberTextFieldState()
-    val locationState = rememberTextFieldState()
-    val bodyResponseState = rememberTextFieldState()
+    val titleState = rememberTextFieldState(
+        initialText = state.selectedLog?.title ?: ""
+    )
+    val descriptionState = rememberTextFieldState(
+        initialText = state.selectedLog?.description ?: ""
+    )
+    val triggerState = rememberTextFieldState(
+        initialText = state.selectedLog?.trigger ?: ""
+    )
+    val locationState = rememberTextFieldState(
+        initialText = state.selectedLog?.location ?: ""
+    )
+    val bodyResponseState = rememberTextFieldState(
+        initialText = state.selectedLog?.bodyResponse ?: ""
+    )
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
