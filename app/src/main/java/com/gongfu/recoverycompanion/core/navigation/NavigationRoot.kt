@@ -18,7 +18,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.AddEditLogScreenRoot
 import com.gongfu.recoverycompanion.logs.presentation.loglist.LogListScreenRoot
-import com.gongfu.recoverycompanion.logs.presentation.utils.LogDestinations
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 
 @Composable
@@ -33,7 +32,7 @@ fun NavigationRoot() {
         Surface {
             NavHost(
                 navController = navController,
-                startDestination = LogDestinations.LogList.route,
+                startDestination = "log_list",
                 modifier = Modifier.fillMaxSize(),
                 enterTransition = {
                     slideInHorizontally(
@@ -61,30 +60,32 @@ fun NavigationRoot() {
                 }
             ) {
                 //Main LogListScreen
-                composable(LogDestinations.LogList.route) {
+                composable("log_list") {
                     LogListScreenRoot(
-                        onAddLogClick = { navController.navigate(LogDestinations.AddLog.route) },
+                        onAddLogClick = { navController.navigate("add_log") },
                         onLogClick = { logId ->
-                            navController.navigate(LogDestinations.AddLog.createRoute(logId))}
+                            navController.navigate("add_log/$logId")
+                        }
                     )
                 }
 
-                //AddLogScreen
+                //Detail Edit
                 composable(
-                    LogDestinations.AddLog.route,
+                    route = "add_log/{logId}",
                     arguments = listOf(
                         navArgument("logId") {
                             type = NavType.StringType
-                            nullable = true
-                            defaultValue = null
+                            defaultValue = "0"
                         }
                     )
-                ) { backStackEntry ->
-                    AddEditLogScreenRoot(  // Remove logId extraction here
-                        onBack = { navController.navigateUp() }
-                    )
+                ) {
+                    AddEditLogScreenRoot(onBack = { navController.navigateUp() })
                 }
 
+                //Detail Add
+                composable("add_log") {
+                    AddEditLogScreenRoot(onBack = { navController.navigateUp() })
+                }
             }
         }
     }

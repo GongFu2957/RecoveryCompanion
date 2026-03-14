@@ -65,7 +65,14 @@ class AddEditLogViewModel(
             try {
                 val existingLog = logRepository.getLogById(logId)
                 existingLog?.let { log ->
-                    _state.update { it.copy(selectedLog = log) }
+                    _state.update { current ->
+                        current.copy(
+                            selectedLog = log,
+                            logId = log.id,
+                            intensityLevel = log.intensityLevel,
+                            outcome = log.outcome
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 _events.send(AddEditLogEvent.Error(R.string.failed_to_load_log))

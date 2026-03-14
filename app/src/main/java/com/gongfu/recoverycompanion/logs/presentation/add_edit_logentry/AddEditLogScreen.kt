@@ -112,20 +112,27 @@ fun AddEditLogScreen(
         state = topAppBarState
     )
     val titleState = rememberTextFieldState(
-        initialText = state.selectedLog?.title ?: ""
     )
     val descriptionState = rememberTextFieldState(
-        initialText = state.selectedLog?.description ?: ""
     )
     val triggerState = rememberTextFieldState(
-        initialText = state.selectedLog?.trigger ?: ""
     )
     val locationState = rememberTextFieldState(
-        initialText = state.selectedLog?.location ?: ""
     )
     val bodyResponseState = rememberTextFieldState(
-        initialText = state.selectedLog?.bodyResponse ?: ""
     )
+    //Repopulate Fields to Edit Log
+    LaunchedEffect(state.selectedLog?.id) {
+        println("🔥 SYNC: LaunchedEffect triggered for log ${state.selectedLog?.id}")
+        state.selectedLog?.let { log ->
+            titleState.edit { replace(0, length, log.title) }
+            descriptionState.edit { replace(0, length, log.description) }
+            triggerState.edit { replace(0, length, log.trigger) }
+            locationState.edit { replace(0, length, log.location ?: "") }
+            bodyResponseState.edit { replace(0, length, log.bodyResponse ?: "") }
+            println("🔥 SYNC: Fields updated with title='${log.title}'")
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
