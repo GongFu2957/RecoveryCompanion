@@ -70,7 +70,7 @@ class AddEditLogViewModel(
                             selectedLog = log,
                             logId = log.id,
                             intensityLevel = log.intensityLevel,
-                            outcome = log.outcome
+                            outcome = log.outcome,
                         )
                     }
                 }
@@ -104,11 +104,13 @@ class AddEditLogViewModel(
 
         _state.update { it.copy(isSavingLog = true, fieldErrors = emptyMap()) }
 
+        val timestamp = _state.value.selectedLog?.timestamp
+
         viewModelScope.launch {
             try {
                 val log = LogEntry(
                     id = state.value.logId ?: 0L,
-                    timestamp = System.currentTimeMillis(),
+                    timestamp = timestamp ?: System.currentTimeMillis(),
                     title = title,
                     description = description,
                     trigger = trigger,

@@ -140,7 +140,7 @@ fun AddEditLogScreen(
             RecoveryTopAppBar(
                 showBackButton = true,
                 //placeholder
-                title = stringResource(R.string.new_log_entry),
+                title = state.selectedLog?.title ?: stringResource(R.string.new_log_entry),
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )

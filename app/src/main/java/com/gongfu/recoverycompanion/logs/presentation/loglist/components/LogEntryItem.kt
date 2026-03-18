@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -40,19 +42,11 @@ fun LogEntryItem(
 ) {
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
-    /* temp until input is handled in the add/edit log screen */
-    val maxTitleCharCount = 27
-    val truncatedTitle = remember(log.title) {
-        if (log.title.length <= maxTitleCharCount) {
-            log.title
-        } else {
-            "${log.title.take(maxTitleCharCount)}..."
-        }
-    }
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
-            .padding(horizontal = 8.dp),
+            .padding(horizontal = 8.dp)
+            .heightIn(min = 64.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp)
 
@@ -60,7 +54,7 @@ fun LogEntryItem(
         Icon(
             imageVector = if (!log.outcome) slipLog else successLog,
             contentDescription = "Icon",
-            tint = MaterialTheme.colorScheme.primary,
+            tint = if (!log.outcome) MaterialTheme.colorScheme.error else Color(77,174,80),
             modifier = Modifier.size(70.dp)
         )
         Column(
@@ -72,19 +66,21 @@ fun LogEntryItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
                     Text(
-                        text = truncatedTitle,
+                        text = log.title,
                         fontWeight = FontWeight.Medium,
                         fontSize = 20.sp,
-                        overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.Bottom,
-                        modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
                             text = stringResource(R.string.intensity_level),
@@ -92,14 +88,20 @@ fun LogEntryItem(
                             fontSize = 12.sp,
                             lineHeight = 14.sp,
                             color = contentColor.copy(alpha = .7f),
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                            modifier = Modifier.weight(1f)
                             )
                         Text(
                             text = formatEpochMillis(log.timestamp),
                             fontWeight = FontWeight.Light,
                             fontStyle = FontStyle.Italic,
                             fontSize = 11.sp,
-                            lineHeight = 13.sp,
-                            color = contentColor.copy(alpha = .6f)
+                            lineHeight = 14.sp,
+                            color = contentColor.copy(alpha = .6f),
+                            maxLines = 1,
+                            modifier = Modifier.weight(1f),
+                            textAlign = TextAlign.End
                         )
                     }
                 }
@@ -122,7 +124,7 @@ private fun LogEntryItemPreview() {
                 id = 0, timestamp = timeStamp, title = "Woke up late again, I can'tbe",
                 description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
                 trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
-                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false
+                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = true
             ),
             onClick = { /* TO DO */ },
             modifier = Modifier.background(
