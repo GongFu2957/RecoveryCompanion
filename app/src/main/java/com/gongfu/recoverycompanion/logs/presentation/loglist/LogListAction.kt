@@ -1,6 +1,6 @@
 package com.gongfu.recoverycompanion.logs.presentation.loglist
 
-import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.util.LogOrder
 
 sealed interface LogListAction {
     data class OnLogClick(val logId: Long) : LogListAction
@@ -9,13 +9,5 @@ sealed interface LogListAction {
 
     data object OnSettingsClick : LogListAction
 
-    data object OnDeleteClick : LogListAction
-
-    data object OnSortDateAscending : LogListAction
-
-    data object OnSortDateDescending : LogListAction
-
-    data object OnSortIntensityLevelAscending : LogListAction
-
-    data object OnSortIntensityLevelDescending : LogListAction
+    data class Order(val logOrder: LogOrder) : LogListAction
 }
