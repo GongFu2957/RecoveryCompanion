@@ -53,7 +53,7 @@ fun ProgressLine(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(colorScheme.primary.copy(.3f), RoundedCornerShape(strokeThickness))
+                        .background(colorScheme.secondary.copy(.3f), RoundedCornerShape(strokeThickness))
                 )
 
                 // Active progress
@@ -61,7 +61,7 @@ fun ProgressLine(
                     modifier = Modifier
                         .fillMaxWidth(progressFraction.coerceIn(0f, 1f))
                         .fillMaxHeight()
-                        .background(colorScheme.primary, RoundedCornerShape(strokeThickness))
+                        .background(colorScheme.secondary, RoundedCornerShape(strokeThickness))
                 )
         }
         Row(

@@ -54,7 +54,7 @@ fun LogEntryItem(
         Icon(
             imageVector = if (!log.outcome) slipLog else successLog,
             contentDescription = "Icon",
-            tint = if (!log.outcome) MaterialTheme.colorScheme.error else Color(77,174,80),
+            tint = if (!log.outcome) Color(200,65,65) else Color(77,174,80),
             modifier = Modifier.size(70.dp)
         )
         Column(
@@ -124,7 +124,7 @@ private fun LogEntryItemPreview() {
                 id = 0, timestamp = timeStamp, title = "Woke up late again, I can'tbe",
                 description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
                 trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
-                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = true
+                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false
             ),
             onClick = { /* TO DO */ },
             modifier = Modifier.background(
