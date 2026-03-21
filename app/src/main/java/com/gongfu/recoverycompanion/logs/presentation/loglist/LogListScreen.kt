@@ -38,9 +38,14 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
+import com.gongfu.recoverycompanion.core.presentation.designsystem.components.FilterChips
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.core.tmp.previewLogList
+import com.gongfu.recoverycompanion.logs.domain.util.LogOrder
+import com.gongfu.recoverycompanion.logs.domain.util.OrderType
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.FilterItem
+import com.gongfu.recoverycompanion.logs.domain.util.FilterOption
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
 import com.gongfu.recoverycompanion.ui.theme.LogoIcon
 import com.gongfu.recoverycompanion.ui.theme.Poppins
@@ -96,11 +101,35 @@ fun LogListScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState
     )
+    val filterOptions = listOf(
+        FilterOption(
+            icon = Icons.Default.ArrowDownward,
+            title = "Date",
+            order = LogOrder.Date(orderType = OrderType.Descending)
+        ),
+        FilterOption(
+            icon = Icons.Default.ArrowUpward,
+            title = "Date",
+            order = LogOrder.Date(orderType = OrderType.Ascending)
+        ),
+        FilterOption(
+            icon = Icons.Default.ArrowDownward,
+            title = "Intensity Level",
+            order = LogOrder.IntensityLevel(orderType = OrderType.Descending)
+        ),
+        FilterOption(
+            icon = Icons.Default.ArrowUpward,
+            title = "Intensity Level",
+            order = LogOrder.IntensityLevel(orderType = OrderType.Ascending)
+        ),
+    )
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             RecoveryTopAppBar(
                 showBackButton = false,
+                showFilterIcon = state.logs.isNotEmpty(),
                 title = stringResource(R.string.log_entries),
                 scrollBehavior = scrollBehavior,
                 menuItems = listOf(
@@ -113,38 +142,7 @@ fun LogListScreen(
                         title = stringResource(R.string.delete),
                     )
                 ),
-                filterItems = listOf(
-                    DropDownItem(
-                        icon = Icons.Default.ArrowUpward,
-                        title = stringResource(R.string.date)
-                    ),
-                    DropDownItem(
-                        icon = Icons.Default.ArrowDownward,
-                        title = stringResource(R.string.date)
-                    ),
-                    DropDownItem(
-                        icon = Icons.Default.ArrowUpward,
-                        title = stringResource(R.string.intensity_level)
-                    ),
-                    DropDownItem(
-                        icon = Icons.Default.ArrowDownward,
-                        title = stringResource(R.string.intensity_level)
-                    ),
-                ),
-                onMenuItemClick = { index ->
-                    when (index) {
-                        0 -> onAction(LogListAction.OnSettingsClick)
-                        1 -> onAction(LogListAction.OnDeleteClick)
-                    }
-                },
-                onFilterItemClick = { index ->
-                    when (index) {
-                        0 -> onAction(LogListAction.OnSortDateAscending)
-                        1 -> onAction(LogListAction.OnSortDateDescending)
-                        2 -> onAction(LogListAction.OnSortIntensityLevelAscending)
-                        3 -> onAction(LogListAction.OnSortIntensityLevelDescending)
-                    }
-                },
+                onFilterClick = { onAction(LogListAction.OnFilterClick) },
                 startContent = {
                     Icon(
                         imageVector = LogoIcon,
@@ -169,17 +167,37 @@ fun LogListScreen(
         floatingActionButtonPosition = FabPosition.End
     ) {
         innerPadding ->
-        if (state.logs.isEmpty()) {
-            LogListEmptyContent(
-                modifier.padding(innerPadding)
-            )
-        } else {
-            LogListContent(
-                state = state,
-                onAction = onAction,
-                modifier = Modifier
-                    .padding(innerPadding)
-            )
+        Column(Modifier.padding(innerPadding)) {
+            if (state.isFilterOpen && state.logs.isNotEmpty()) {
+                val filterItems = filterOptions.map { option ->
+                    FilterItem(
+                        icon = option.icon,
+                        title = option.title,
+                        isSelected = when (val current = state.logOrder) {
+                            is LogOrder.Date -> option.order is LogOrder.Date &&
+                                    current.orderType == option.order.orderType
+                            is LogOrder.IntensityLevel -> option.order is LogOrder.IntensityLevel &&
+                                    current.orderType == option.order.orderType
+                        }
+                    )
+                }
+                FilterChips(
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    filterItems = filterItems,
+                    onFilterItemClick = { index ->
+                        val selectedOption = filterOptions[index]
+                        onAction(LogListAction.Order(selectedOption.order))
+                    }
+                )
+            }
+            if (state.logs.isEmpty()) {
+                LogListEmptyContent()
+            } else {
+                LogListContent(
+                    state = state,
+                    onAction = onAction
+                )
+            }
         }
     }
 }
@@ -229,7 +247,8 @@ private fun LogListScreenPreview() {
     RecoveryCompanionTheme {
         LogListScreen(
             state = LogListState(
-                logs = previewLogList
+                logs = previewLogList,
+                isFilterOpen = true
             ),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)

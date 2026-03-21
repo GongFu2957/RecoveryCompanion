@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.MoreVert
@@ -48,19 +46,16 @@ import com.gongfu.recoverycompanion.ui.theme.backArrowAlt
 @Composable
 fun RecoveryTopAppBar(
     showBackButton: Boolean,
-    title: String,
     modifier: Modifier = Modifier,
+    showFilterIcon: Boolean = false,
+    title: String,
     menuItems: List<DropDownItem> = emptyList(),
-    filterItems: List<DropDownItem> = emptyList(),
-    onFilterItemClick: (Int) -> Unit = {},
     onMenuItemClick: (Int) -> Unit = {},
+    onFilterClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     startContent: (@Composable () -> Unit)? = null
 ) {
-    var isFilterDropDownOpen by rememberSaveable {
-        mutableStateOf(false)
-    }
     var isDropDownMenuOpen by rememberSaveable {
         mutableStateOf(false)
     }
@@ -99,43 +94,14 @@ fun RecoveryTopAppBar(
         modifier = modifier,
         scrollBehavior = scrollBehavior,
         actions = {
-
-            if (filterItems.isNotEmpty()) {
-                Box {
-                    DropdownMenu(
-                        expanded = isFilterDropDownOpen,
-                        onDismissRequest = {
-                            isFilterDropDownOpen = false
-                        }
-                    ) {
-                        filterItems.forEachIndexed { index, item ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clickable(onClick = { onFilterItemClick(index) })
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.title
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = item.title
-                                )
-                            }
-                        }
-                    }
-                    IconButton(onClick = {
-                        isFilterDropDownOpen = true
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.FilterList,
-                            contentDescription = stringResource(R.string.filter_list),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+            if (showFilterIcon) {
+                IconButton(
+                    onClick = onFilterClick
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.FilterList,
+                        contentDescription = stringResource(R.string.filter_list),
+                    )
                 }
             }
 
@@ -204,25 +170,8 @@ private fun RecoveryTopAppBarPreview() {
                     title = "Delete"
                 )
             ),
-            filterItems = listOf(
-                DropDownItem(
-                    icon = Icons.Default.ArrowUpward,
-                    title = "Date Ascending"
-                ),
-                DropDownItem(
-                    icon = Icons.Default.ArrowDownward,
-                    title = "Date Descending"
-                ),
-                DropDownItem(
-                    icon = Icons.Default.ArrowUpward,
-                    title = "Intensity Ascending"
-                ),
-                DropDownItem(
-                    icon = Icons.Default.ArrowDownward,
-                    title = "Intensity Descending"
-                ),
-            ),
-            onFilterItemClick = {},
+            showFilterIcon = true,
+            onFilterClick = {},
             onMenuItemClick = {},
         )
     }

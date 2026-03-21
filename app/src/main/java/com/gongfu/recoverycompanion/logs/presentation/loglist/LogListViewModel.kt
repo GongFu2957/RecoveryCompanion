@@ -3,10 +3,8 @@ package com.gongfu.recoverycompanion.logs.presentation.loglist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gongfu.recoverycompanion.R
-import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
 import com.gongfu.recoverycompanion.logs.domain.repository.LogRepository
 import com.gongfu.recoverycompanion.logs.domain.util.LogOrder
-import com.gongfu.recoverycompanion.logs.domain.util.OrderType
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,17 +22,24 @@ class LogListViewModel(
     val events = _events.receiveAsFlow()
 
     init {
-        getLogs(LogOrder.Date(OrderType.Descending))
+        getLogs(_state.value.logOrder)
     }
 
     fun onAction(action: LogListAction) {
         when (action) {
             is LogListAction.CreateLog -> Unit
             is LogListAction.OnLogClick -> selectedLog(action.logId)
+            is LogListAction.Order -> getLogs(action.order)
+            is LogListAction.OnFilterClick -> toggleFilter()
             else -> Unit
         }
     }
 
+    private fun toggleFilter() {
+        _state.update {
+            it.copy(isFilterOpen = !_state.value.isFilterOpen)
+        }
+    }
     private fun selectedLog(logById: Long) {
         _state.update { it.copy(selectedLogById = logById ) }
 
@@ -50,7 +55,8 @@ class LogListViewModel(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    isLoading = true
+                    isLoading = true,
+                    logOrder = logOrder
                 )
             }
 
