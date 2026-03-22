@@ -41,11 +41,11 @@ import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.FilterChips
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.core.tmp.previewLogList
+import com.gongfu.recoverycompanion.logs.domain.util.FilterOption
 import com.gongfu.recoverycompanion.logs.domain.util.LogOrder
 import com.gongfu.recoverycompanion.logs.domain.util.OrderType
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.FilterItem
-import com.gongfu.recoverycompanion.logs.domain.util.FilterOption
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
 import com.gongfu.recoverycompanion.ui.theme.LogoIcon
 import com.gongfu.recoverycompanion.ui.theme.Poppins
@@ -248,7 +248,7 @@ private fun LogListScreenPreview() {
         LogListScreen(
             state = LogListState(
                 logs = previewLogList,
-                isFilterOpen = true
+                isFilterOpen = false
             ),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
