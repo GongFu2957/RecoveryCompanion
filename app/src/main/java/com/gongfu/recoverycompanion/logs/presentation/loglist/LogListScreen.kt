@@ -1,6 +1,7 @@
 package com.gongfu.recoverycompanion.logs.presentation.loglist
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,12 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -98,28 +97,28 @@ fun LogListScreen(
     modifier: Modifier = Modifier
 ) {
     val topAppBarState = rememberTopAppBarState()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(
         state = topAppBarState
     )
     val filterOptions = listOf(
         FilterOption(
             icon = Icons.Default.ArrowDownward,
-            title = "Date",
+            title = stringResource(R.string.date),
             order = LogOrder.Date(orderType = OrderType.Descending)
         ),
         FilterOption(
             icon = Icons.Default.ArrowUpward,
-            title = "Date",
+            title = stringResource(R.string.date),
             order = LogOrder.Date(orderType = OrderType.Ascending)
         ),
         FilterOption(
             icon = Icons.Default.ArrowDownward,
-            title = "Intensity Level",
+            title = stringResource(R.string.intensity_level),
             order = LogOrder.IntensityLevel(orderType = OrderType.Descending)
         ),
         FilterOption(
             icon = Icons.Default.ArrowUpward,
-            title = "Intensity Level",
+            title = stringResource(R.string.intensity_level),
             order = LogOrder.IntensityLevel(orderType = OrderType.Ascending)
         ),
     )
@@ -136,10 +135,6 @@ fun LogListScreen(
                     DropDownItem(
                         icon = Icons.Default.Settings,
                         title = stringResource(R.string.settings),
-                    ),
-                    DropDownItem(
-                        icon = Icons.Default.Delete,
-                        title = stringResource(R.string.delete),
                     )
                 ),
                 onFilterClick = { onAction(LogListAction.OnFilterClick) },
@@ -152,6 +147,7 @@ fun LogListScreen(
                     )
                 }
             )
+            //Filter section
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -168,7 +164,9 @@ fun LogListScreen(
     ) {
         innerPadding ->
         Column(Modifier.padding(innerPadding)) {
-            if (state.isFilterOpen && state.logs.isNotEmpty()) {
+            AnimatedVisibility(
+                visible = state.isFilterOpen && state.logs.isNotEmpty()
+            ) {
                 val filterItems = filterOptions.map { option ->
                     FilterItem(
                         icon = option.icon,
@@ -190,12 +188,13 @@ fun LogListScreen(
                     }
                 )
             }
-            if (state.logs.isEmpty()) {
+            if (state.logs.isEmpty() && !state.isLoading) {
                 LogListEmptyContent()
             } else {
                 LogListContent(
                     state = state,
-                    onAction = onAction
+                    onAction = onAction,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -219,7 +218,6 @@ private fun LogListContent(
                 onClick = { onAction(LogListAction.OnLogClick(logEntry.id))},
                 modifier = Modifier.fillMaxWidth()
             )
-            HorizontalDivider()
         }
     }
 
@@ -248,7 +246,7 @@ private fun LogListScreenPreview() {
         LogListScreen(
             state = LogListState(
                 logs = previewLogList,
-                isFilterOpen = false
+                isFilterOpen = true
             ),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)

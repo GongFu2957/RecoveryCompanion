@@ -55,6 +55,27 @@ class AddEditLogViewModel(
             is AddEditLogAction.OutcomeChanged -> {
                 _state.update { it.copy(outcome = action.outcome) }
             }
+            is AddEditLogAction.OnDeleteClick -> {
+                deleteLog(_state.value.logId)
+            }
+        }
+    }
+
+    private fun deleteLog(logId: Long?) {
+        if (logId == null) return
+
+        viewModelScope.launch {
+            try {
+                val currentLog = logRepository.getLogById(logId)
+                currentLog?.let { log ->
+                    logRepository.deleteLog(log)
+                    _events.send(AddEditLogEvent.ShowDeleteSuccessful(R.string.add_log_delete_successful))
+                    _events.send(AddEditLogEvent.NavigateBack)
+                }
+            } catch (e: Exception) {
+                _events.send(AddEditLogEvent.Error(R.string.add_log_delete_error))
+                TODO("Implement Catching exception with Timber Logging")
+            }
         }
     }
 

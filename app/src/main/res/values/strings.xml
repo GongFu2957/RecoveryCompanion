@@ -15,7 +15,7 @@
     <string name="add_log_description">Description</string>
     <string name="add_log_trigger">Trigger</string>
     <string name="add_log_location">Location</string>
-    <string name="add_log_intensitylevel">Intensity Level</string>
+    <string name="add_log_intensity_level">Intensity Level</string>
     <string name="add_log_body_response">Body Response</string>
     <string name="add_log_healthy_outcome">Healthy Outcome?</string>
     <string name="add_log_save">Save Log</string>
@@ -27,4 +27,10 @@
     <string name="failed_to_fetch_logs">Something happened! Failed to fetch logs!</string>
     <string name="failed_to_fetch_log">Something happened! Failed to fetch log!</string>
     <string name="failed_to_load_log">Oh no! Log Failed to Load!</string>
+    <string name="add_log_description_help">This is where all the details related to your Log go. Whether that be the steps leading up to it, thought patterns, or feelings about it afterward. Being more detailed here will help you find patterns easier.</string>
+    <string name="add_log_trigger_help">A trigger is a cue that primes your mind and body to respond in a specific way. Some examples: anxious, bored, lonely, or tired.</string>
+    <string name="add_log_location_help">This is where the trigger or temptation occurred. Environmental cues can help identify recurring patterns. Some examples: the bathroom, a bar, the bedroom, or social situations involving specific people, places, or things.</string>
+    <string name="add_log_body_response_help">A body response can be anything from physical sensations to somatic signals from your body. Some examples: breathless, dizzy, empty, frantic, numb, or tense. Noticing these sensations and where they manifest is vital to understanding the information your body is trying to tell you.</string>
+    <string name="add_log_delete_error">Oh no! The Log did not delete properly!</string>
+    <string name="add_log_delete_successful">Log Successfully Deleted!</string>
 </resources>

@@ -1,7 +1,5 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
-import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
-
 sealed interface AddEditLogAction {
     data class OnSaveClick(
         val title: String,
@@ -15,5 +13,6 @@ sealed interface AddEditLogAction {
 
     data class IntensityChanged(val level: Int) : AddEditLogAction
     data class OutcomeChanged(val outcome: Boolean) : AddEditLogAction
+    data class OnDeleteClick(val logId: Long?) : AddEditLogAction
     data object OnBackClick : AddEditLogAction
 }

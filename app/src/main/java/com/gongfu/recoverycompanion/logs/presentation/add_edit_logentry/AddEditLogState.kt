@@ -10,5 +10,6 @@ data class AddEditLogState(
     val fieldErrors: Map<LogField, String> = emptyMap(),
     val intensityLevel: Int = 1,
     val outcome: Boolean = false,
-    val isSavingLog: Boolean = false
+    val isSavingLog: Boolean = false,
+    val previousLog: LogEntry? = null,
 )

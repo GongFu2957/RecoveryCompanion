@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
+import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.Typography
 import com.gongfu.recoverycompanion.ui.theme.helpQuestion
@@ -76,6 +79,14 @@ fun AddEditLogScreenRoot(
                     ).show()
                 }
                 is AddEditLogEvent.ShowSaveSuccessful -> {
+                    Toast.makeText(
+                        context,
+                        event.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is AddEditLogEvent.ShowDeleteSuccessful -> {
+                    //Temp make Snackbar
                     Toast.makeText(
                         context,
                         event.message,
@@ -123,14 +134,14 @@ fun AddEditLogScreen(
     )
     //Repopulate Fields to Edit Log
     LaunchedEffect(state.selectedLog?.id) {
-        println("🔥 SYNC: LaunchedEffect triggered for log ${state.selectedLog?.id}")
+        println("LaunchedEffect triggered for log ${state.selectedLog?.id}")
         state.selectedLog?.let { log ->
             titleState.edit { replace(0, length, log.title) }
             descriptionState.edit { replace(0, length, log.description) }
             triggerState.edit { replace(0, length, log.trigger) }
-            locationState.edit { replace(0, length, log.location ?: "") }
-            bodyResponseState.edit { replace(0, length, log.bodyResponse ?: "") }
-            println("🔥 SYNC: Fields updated with title='${log.title}'")
+            locationState.edit { replace(0, length, log.location) }
+            bodyResponseState.edit { replace(0, length, log.bodyResponse) }
+            println("Fields updated with title='${log.title}'")
         }
     }
 
@@ -141,6 +152,15 @@ fun AddEditLogScreen(
                 showBackButton = true,
                 //placeholder
                 title = state.selectedLog?.title ?: stringResource(R.string.new_log_entry),
+                menuItems = if (state.selectedLog != null) {
+                    listOf(
+                        DropDownItem(
+                            icon = Icons.Default.Delete,
+                            title = stringResource(R.string.delete)
+                        )
+                    )
+                } else emptyList(),
+                onMenuItemClick = { onAction(AddEditLogAction.OnDeleteClick(state.logId)) },
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )
@@ -173,7 +193,7 @@ fun AddEditLogScreen(
                         maxHeightInLines = 4
                     ),
                     endIcon = helpQuestion,
-                    helpText = "This is where you put all the details related to your Log. Whether that be the steps leading up to it, thought patterns, or your feelings about it afterwards. Being more detailed will help you find patterns easier.",
+                    helpText = stringResource(R.string.add_log_description_help),
                     error = state.fieldErrors[LogField.DESCRIPTION]
                 )
 
@@ -182,7 +202,7 @@ fun AddEditLogScreen(
                     label = stringResource(R.string.add_log_trigger),
                     state = triggerState,
                     endIcon = helpQuestion,
-                    helpText = "A trigger is a cue that primes your mind and body to respond in a specific way.",
+                    helpText = stringResource(R.string.add_log_trigger_help),
                     error = state.fieldErrors[LogField.TRIGGER]
                 )
 
@@ -190,6 +210,8 @@ fun AddEditLogScreen(
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_location),
                     state = locationState,
+                    endIcon = helpQuestion,
+                    helpText = stringResource(R.string.add_log_location_help),
                     error = state.fieldErrors[LogField.LOCATION]
                 )
 
@@ -208,7 +230,7 @@ fun AddEditLogScreen(
                             .padding(16.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.add_log_intensitylevel),
+                            text = stringResource(R.string.add_log_intensity_level),
                             color = MaterialTheme.colorScheme.onBackground,
                             style = Typography.labelMedium,
                         )
@@ -247,7 +269,7 @@ fun AddEditLogScreen(
                     label = stringResource(R.string.add_log_body_response),
                     state = bodyResponseState,
                     endIcon = helpQuestion,
-                    helpText = "",
+                    helpText = stringResource(R.string.add_log_body_response_help),
                     error = state.fieldErrors[LogField.BODY_RESPONSE]
                 )
 
@@ -285,15 +307,9 @@ fun AddEditLogScreen(
                         .padding(top = 24.dp),
                     enabled = !state.isSavingLog
                 ) {
-                    if (!state.isSavingLog) {
-                        Text(
-                            text = stringResource(R.string.add_log_save)
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.add_log_saving)
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.add_log_save)
+                    )
                 }
             }
         }
