@@ -33,4 +33,8 @@
     <string name="add_log_body_response_help">A body response can be anything from physical sensations to somatic signals from your body. Some examples: breathless, dizzy, empty, frantic, numb, or tense. Noticing these sensations and where they manifest is vital to understanding the information your body is trying to tell you.</string>
     <string name="add_log_delete_error">Oh no! The Log did not delete properly!</string>
     <string name="add_log_delete_successful">Log Successfully Deleted!</string>
+    <string name="add_log_save_update">Log Successfully Updated!</string>
+    <string name="add_log_update">Update Log</string>
+    <string name="add_log_log_deleted">Log Deleted</string>
+    <string name="add_log_undo_error">Oh no! The Log did not restore properly!</string>
 </resources>

@@ -56,12 +56,33 @@ class AddEditLogViewModel(
                 _state.update { it.copy(outcome = action.outcome) }
             }
             is AddEditLogAction.OnDeleteClick -> {
-                deleteLog(_state.value.logId)
+                showSnackBarUndo()
             }
         }
     }
 
-    private fun deleteLog(logId: Long?) {
+    private fun showSnackBarUndo() {
+        val logId = _state.value.logId ?: return
+
+        viewModelScope.launch {
+            _events.send(AddEditLogEvent.ShowSnackBarUndo(R.string.add_log_log_deleted, logId))
+        }
+    }
+
+    fun undoDeleteLog(logId: Long?) {
+        if (logId == null) return
+
+        viewModelScope.launch {
+            try {
+                loadExistingLog(logId)
+            } catch (e: Exception) {
+                _events.send(AddEditLogEvent.Error(R.string.add_log_undo_error))
+                TODO("Implement Catching exception with Timber Logging")
+            }
+        }
+    }
+
+    fun deleteLogPermanently(logId: Long?) {
         if (logId == null) return
 
         viewModelScope.launch {
@@ -69,8 +90,6 @@ class AddEditLogViewModel(
                 val currentLog = logRepository.getLogById(logId)
                 currentLog?.let { log ->
                     logRepository.deleteLog(log)
-                    _events.send(AddEditLogEvent.ShowDeleteSuccessful(R.string.add_log_delete_successful))
-                    _events.send(AddEditLogEvent.NavigateBack)
                 }
             } catch (e: Exception) {
                 _events.send(AddEditLogEvent.Error(R.string.add_log_delete_error))
@@ -141,7 +160,8 @@ class AddEditLogViewModel(
                     outcome = outcome
                 )
                 logRepository.insertLog(log)
-                _events.send(AddEditLogEvent.ShowSaveSuccessful(R.string.add_log_save_successful))
+                val saveUpdateToastText = if (_state.value.logId != null) R.string.add_log_save_update else R.string.add_log_save_successful
+                _events.send(AddEditLogEvent.ShowSaveSuccessful(saveUpdateToastText))
                 _events.send(AddEditLogEvent.NavigateBack)
             } catch (e: Exception) {
                 _events.send(AddEditLogEvent.ShowSaveError(R.string.add_log_save_error))
