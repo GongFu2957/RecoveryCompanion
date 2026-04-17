@@ -11,4 +11,5 @@ data class AddEditLogState(
     val intensityLevel: Int = 1,
     val outcome: Boolean = false,
     val isSavingLog: Boolean = false,
+    val openDeleteDialog: Boolean = false
 )

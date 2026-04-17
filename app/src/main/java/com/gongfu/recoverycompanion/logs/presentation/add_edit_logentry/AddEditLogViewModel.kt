@@ -56,29 +56,20 @@ class AddEditLogViewModel(
                 _state.update { it.copy(outcome = action.outcome) }
             }
             is AddEditLogAction.OnDeleteClick -> {
-                showSnackBarUndo()
+                showDeleteDialog()
             }
         }
     }
 
-    private fun showSnackBarUndo() {
-        val logId = _state.value.logId ?: return
+    private fun showDeleteDialog() {
+        if (_state.value.logId == null) return
 
         viewModelScope.launch {
-            _events.send(AddEditLogEvent.ShowSnackBarUndo(R.string.add_log_log_deleted, logId))
-        }
-    }
+           try {
+               _state.update { it.copy(openDeleteDialog = true) }
+           } catch(e: Exception) {
 
-    fun undoDeleteLog(logId: Long?) {
-        if (logId == null) return
-
-        viewModelScope.launch {
-            try {
-                loadExistingLog(logId)
-            } catch (e: Exception) {
-                _events.send(AddEditLogEvent.Error(R.string.add_log_undo_error))
-                TODO("Implement Catching exception with Timber Logging")
-            }
+           }
         }
     }
 

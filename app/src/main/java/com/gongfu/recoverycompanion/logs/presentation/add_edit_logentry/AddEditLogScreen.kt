@@ -8,14 +8,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,24 +26,22 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialogDefaults
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -67,7 +68,6 @@ fun AddEditLogScreenRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->
             when (event) {
@@ -92,21 +92,6 @@ fun AddEditLogScreenRoot(
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                is AddEditLogEvent.ShowSnackBarUndo -> {
-                    // SHow snackbar
-                    val result = snackbarHostState.showSnackbar(
-                        message = "Successfully Deleted",
-                        actionLabel = "Undo",
-                        duration = SnackbarDuration.Long
-                    )
-                    if (result == SnackbarResult.ActionPerformed) {
-                        // Maybe try to keep these functions in the viewModel?
-                        viewModel.undoDeleteLog(event.logId)
-                    } else {
-                        viewModel.deleteLogPermanently(logId = event.logId)
-                        onBack()
-                    }
-                }
                 is AddEditLogEvent.NavigateBack -> {
                     onBack()
                 }
@@ -117,7 +102,6 @@ fun AddEditLogScreenRoot(
 
     AddEditLogScreen(
         state = state,
-        snackbarHostState = snackbarHostState,
         onAction = { action ->
             when (action) {
                 AddEditLogAction.OnBackClick -> if (!state.isSavingLog) onBack()
@@ -132,8 +116,6 @@ fun AddEditLogScreenRoot(
 @Composable
 fun AddEditLogScreen(
     state: AddEditLogState,
-    snackbarHostState: SnackbarHostState,
-
     onAction: (AddEditLogAction) -> Unit,
     modifier: Modifier = Modifier
     ) {
@@ -164,11 +146,47 @@ fun AddEditLogScreen(
         }
     }
 
+    // Delete Dialog
+    if (state.openDeleteDialog) {
+        BasicAlertDialog(
+            onDismissRequest = {
+                // Dismiss the dialog when the user clicks outside the dialog or on the back
+                // button. If you want to disable that functionality, simply use an empty
+                // onDismissRequest.
+            }
+        ) {
+            Surface(
+                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
+                shape = MaterialTheme.shapes.large,
+                tonalElevation = AlertDialogDefaults.TonalElevation,
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text =
+                            "Are you sure you want to delete this Log? This action is unreversible."
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        TextButton(
+                            onClick = { },
+                        ) {
+                            Text("Delete")
+                        }
+                        TextButton(
+                            onClick = { },
+                        ) {
+                            Text("Cancel")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         topBar = {
             RecoveryTopAppBar(
                 showBackButton = true,
@@ -357,7 +375,20 @@ private fun AddEditLogScreenPreview() {
             state = previewLogStateEmpty,
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            snackbarHostState = SnackbarHostState()
         )
     }
 }
+
+@PreviewLightDark
+@Composable
+private fun AddEditLogDialogPreview() {
+    RecoveryCompanionTheme {
+        AddEditLogScreen(
+            state = AddEditLogState(openDeleteDialog = true),
+            onAction = {},
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
+
+
