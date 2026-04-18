@@ -1,12 +1,11 @@
 <div align="center">
-  <img src="heart_plus_24dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.png" alt="Recovery Companion" width="200">
+  <img src="heart_plus_150dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.png" alt="Recovery Companion" width="200">
   <h1>Recovery Companion</h1>
   <p>Recovery Companion is an app designed to give you useful insights into specific triggers and temptations, focusing on why they happen and when to allow you to form healthy responses when they arise.<p>
 
-  [![Contributors][contributors-shield]][contributors-url]
-  [![Forks][forks-shield]][forks-url]
-  [![Stargazers][stars-shield]][stars-url]
-  [![Issues][issues-shield]][issues-url]
+  [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)](LICENSE)
+  [![Platform: Android](https://img.shields.io/badge/Platform-Android-green?style=for-the-badge&logo=android)]()
+  [![Built with Kotlin](https://img.shields.io/badge/Built_with-Kotlin-purple?style=for-the-badge)](https://kotlinlang.org/)
 
 </div>
 
@@ -16,16 +15,4 @@
 
 ## License
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/GongFu2957/RecoveryCompanion.svg?style=flat-square
-[contributors-url]: https://github.com/GongFu2957/RecoveryCompanion/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/GongFu2957/RecoveryCompanion.svg?style=flat-square
-[forks-url]: https://github.com/GongFu2957/RecoveryCompanion/network/members
-[stars-shield]: https://img.shields.io/github/stars/GongFu2957/RecoveryCompanion.svg?style=flat-square
-[stars-url]: https://github.com/GongFu2957/RecoveryCompanion/stargazers
-[issues-shield]: https://img.shields.io/github/issues/GongFu2957/RecoveryCompanion.svg?style=flat-square
-[issues-url]: https://github.com/GongFu2957/RecoveryCompanion/issues
-[license-shield]: https://img.shields.io/github/license/GongFu2957/RecoveryCompanion.svg?style=flat-square
-[license-url]: https://github.com/GongFu2957/RecoveryCompanion/blob/master/LICENSE.txt
-[product-screenshot]: 
+This project is licensed under [GPL-3.0](LICENSE)
