@@ -12,7 +12,7 @@
 <p float="center">
   <img width="45%" alt="Sample of LogListScreen" src="https://github.com/user-attachments/assets/9425fb8d-f800-402a-80c5-4ac8dfccdea8" />
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <img width="45%" alt="Sample of Adding a Log" src="https://github.com/user-attachments/assets/8f4ca6e6-ea87-4455-8c0b-246eefb5b9d1" />
+  <img width="45%" alt="Sample of Adding a Log" src="https://github.com/user-attachments/assets/a1810d3b-fe4d-4428-ad06-11792c09ee48" />
 </p>
 
 ## Getting Started
