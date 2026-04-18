@@ -59,9 +59,6 @@ fun LogListScreenRoot(
     viewModel: LogListViewModel = koinViewModel(),
     ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val testState = LogListState(
-        logs = previewLogList
-    )
     val context = LocalContext.current
     LaunchedEffect(viewModel.events) {
         viewModel.events.collect { event ->

@@ -5,5 +5,5 @@ sealed interface AddEditLogEvent {
     data class ShowDeleteSuccessful(val message: Int) : AddEditLogEvent
     data class ShowSaveError(val error: Int) : AddEditLogEvent
     data class Error(val error: Int) : AddEditLogEvent
-    data object NavigateBack : AddEditLogEvent
+     data object NavigateBack : AddEditLogEvent
 }

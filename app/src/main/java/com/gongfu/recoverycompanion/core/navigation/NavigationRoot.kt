@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,9 +21,6 @@ import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 @Composable
 fun NavigationRoot() {
     val navController = rememberNavController()
-
-    // Animation setup with RTL support
-    val isLtr = LocalLayoutDirection.current == LayoutDirection.Ltr
     val slideTime = 300
 
     RecoveryCompanionTheme {
@@ -36,25 +31,25 @@ fun NavigationRoot() {
                 modifier = Modifier.fillMaxSize(),
                 enterTransition = {
                     slideInHorizontally(
-                        initialOffsetX = { if (isLtr) it else -it },
+                        initialOffsetX = { it },
                         animationSpec = tween(slideTime)
                     ) + fadeIn(animationSpec = tween(slideTime))
                 },
                 exitTransition = {
                     slideOutHorizontally(
-                        targetOffsetX = { if (isLtr) -it else it },
+                        targetOffsetX = { -it },
                         animationSpec = tween(slideTime)
                     ) + fadeOut(animationSpec = tween(slideTime))
                 },
                 popEnterTransition = {
                     slideInHorizontally(
-                        initialOffsetX = { if (isLtr) -it else it },
+                        initialOffsetX = { -it },
                         animationSpec = tween(slideTime)
                     ) + fadeIn(animationSpec = tween(slideTime))
                 },
                 popExitTransition = {
                     slideOutHorizontally(
-                        targetOffsetX = { if (isLtr) it else -it },
+                        targetOffsetX = { it },
                         animationSpec = tween(slideTime)
                     ) + fadeOut(animationSpec = tween(slideTime))
                 }

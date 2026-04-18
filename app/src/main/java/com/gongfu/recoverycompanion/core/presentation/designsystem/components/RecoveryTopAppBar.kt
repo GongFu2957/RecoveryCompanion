@@ -76,7 +76,7 @@ fun RecoveryTopAppBar(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontFamily = Poppins,
                     maxLines = 1,
-                    overflow = TextOverflow.Clip
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         },

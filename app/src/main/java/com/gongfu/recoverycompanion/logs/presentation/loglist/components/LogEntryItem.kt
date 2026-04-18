@@ -14,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -121,7 +120,7 @@ private fun LogEntryItemPreview() {
     RecoveryCompanionTheme {
         LogEntryItem(
             log = LogEntry(
-                id = 0, timestamp = timeStamp, title = "Woke up late again, I can'tbe",
+                id = 0, timestamp = timeStamp, title = "Woke up late again, I can't be",
                 description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
                 trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
                 bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false

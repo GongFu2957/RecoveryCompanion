@@ -13,6 +13,9 @@ sealed interface AddEditLogAction {
 
     data class IntensityChanged(val level: Int) : AddEditLogAction
     data class OutcomeChanged(val outcome: Boolean) : AddEditLogAction
-    data class OnDeleteClick(val logId: Long?) : AddEditLogAction
+    data object OnDeleteClick : AddEditLogAction
+
+    data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction
+    data object DismissDelete : AddEditLogAction
 }
