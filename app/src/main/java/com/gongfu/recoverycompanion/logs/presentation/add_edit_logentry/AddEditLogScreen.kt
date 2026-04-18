@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -26,10 +28,12 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -86,6 +90,13 @@ fun AddEditLogScreenRoot(
                     ).show()
                 }
                 is AddEditLogEvent.ShowSaveSuccessful -> {
+                    Toast.makeText(
+                        context,
+                        event.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is AddEditLogEvent.ShowDeleteSuccessful-> {
                     Toast.makeText(
                         context,
                         event.message,
@@ -156,28 +167,42 @@ fun AddEditLogScreen(
             }
         ) {
             Surface(
-                modifier = Modifier.wrapContentWidth().wrapContentHeight(),
+                modifier = Modifier.widthIn(max = 300.dp).wrapContentHeight(),
                 shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.surfaceContainer,
                 tonalElevation = AlertDialogDefaults.TonalElevation,
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text =
-                            "Are you sure you want to delete this Log? This action is unreversible."
+                        text = stringResource(R.string.add_log_delete_prompt),
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(24.dp))
                     Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
                     ) {
                         TextButton(
-                            onClick = { },
+                            onClick = { onAction(AddEditLogAction.DismissDelete) },
                         ) {
-                            Text("Delete")
+                            Text(text = stringResource(R.string.add_log_delete_dismiss))
                         }
                         TextButton(
-                            onClick = { },
+                            onClick = { onAction(AddEditLogAction.OnDeletePermanently) },
                         ) {
-                            Text("Cancel")
+                            Text(
+                                text = stringResource(R.string.add_log_delete_confirm),
+                                color = MaterialTheme.colorScheme.error
+                            )
                         }
                     }
                 }
@@ -190,7 +215,6 @@ fun AddEditLogScreen(
         topBar = {
             RecoveryTopAppBar(
                 showBackButton = true,
-                //placeholder
                 title = state.selectedLog?.title ?: stringResource(R.string.new_log_entry),
                 menuItems = if (state.selectedLog != null) {
                     listOf(
@@ -200,7 +224,7 @@ fun AddEditLogScreen(
                         )
                     )
                 } else emptyList(),
-                onMenuItemClick = { onAction(AddEditLogAction.OnDeleteClick(state.logId)) },
+                onMenuItemClick = { onAction(AddEditLogAction.OnDeleteClick) },
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }
             )

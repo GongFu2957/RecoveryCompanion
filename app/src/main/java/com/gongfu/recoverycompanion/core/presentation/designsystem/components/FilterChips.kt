@@ -61,7 +61,7 @@ fun FilterChips(
 private fun PreviewFilterChips() {
     RecoveryCompanionTheme {
         FilterChips(
-            filterItems = listOf<FilterItem>(
+            filterItems = listOf(
                 FilterItem(
                     icon = Icons.Default.ArrowUpward ,
                     title = "Date",

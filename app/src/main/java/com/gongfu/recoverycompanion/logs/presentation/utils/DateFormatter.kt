@@ -2,7 +2,6 @@ package com.gongfu.recoverycompanion.logs.presentation.utils
 
 import java.time.Instant
 import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -24,5 +23,3 @@ fun formatEpochMillis(epochMillis: Long): String {
 
     return formatter.format(instant)
 }
-
-fun currentTimeToEpochMillis() = System.currentTimeMillis()

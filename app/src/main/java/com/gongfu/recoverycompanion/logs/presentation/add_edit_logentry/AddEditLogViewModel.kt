@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class AddEditLogViewModel(
     private val logRepository: LogRepository,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _state = MutableStateFlow(AddEditLogState())
     val state = _state.asStateFlow()
@@ -56,25 +56,21 @@ class AddEditLogViewModel(
                 _state.update { it.copy(outcome = action.outcome) }
             }
             is AddEditLogAction.OnDeleteClick -> {
-                showDeleteDialog()
+                if (_state.value.logId != null) {
+                    _state.update { it.copy(openDeleteDialog = true) }
+                }
+            }
+            is AddEditLogAction.OnDeletePermanently -> {
+                deleteLogPermanently()
+            }
+            is AddEditLogAction.DismissDelete -> {
+                _state.update { it.copy(openDeleteDialog = false) }
             }
         }
     }
 
-    private fun showDeleteDialog() {
-        if (_state.value.logId == null) return
-
-        viewModelScope.launch {
-           try {
-               _state.update { it.copy(openDeleteDialog = true) }
-           } catch(e: Exception) {
-
-           }
-        }
-    }
-
-    fun deleteLogPermanently(logId: Long?) {
-        if (logId == null) return
+    private fun deleteLogPermanently() {
+        val logId = _state.value.logId ?: return
 
         viewModelScope.launch {
             try {
@@ -82,6 +78,8 @@ class AddEditLogViewModel(
                 currentLog?.let { log ->
                     logRepository.deleteLog(log)
                 }
+                _events.send(AddEditLogEvent.ShowDeleteSuccessful(R.string.add_log_delete_successful))
+                _events.send(AddEditLogEvent.NavigateBack)
             } catch (e: Exception) {
                 _events.send(AddEditLogEvent.Error(R.string.add_log_delete_error))
                 TODO("Implement Catching exception with Timber Logging")
