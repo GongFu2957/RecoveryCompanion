@@ -16,8 +16,17 @@
 </p>
 
 ## Getting Started
+Follow these steps to clone and run the project locally.
 
-- TODO
+### Prerequisites
+- Git installed ([download here](https://git-scm.com/))
+- Android Studio ([download here](https://developer.android.com/studio))
+
+### Cloning the Repository
+- Open Android Studio
+- On the welcome screen, select **Check out project from Version Control.**
+- Alternatively, go to **File > New > Project from Version Control > Git.**
+- Paste the repository URL: https://github.com/GongFu2957/RecoveryCompanion.git
 
 ## License
 
