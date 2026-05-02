@@ -1,7 +1,7 @@
 <div align="center">
   <img src="heart_plus_150dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.png" alt="Recovery Companion" width="150">
   <h1>Recovery Companion</h1>
-  <p>Recovery Companion is an app designed to give you useful insights into specific triggers and temptations. Allowing you to build connections and see patterns and help prevent relapses when temptations arise.<p>
+  <p>Recovery Companion is an app designed to give you useful insights into specific triggers and temptations. Allowing you to build connections and see patterns and help prevent relapses when temptations arise. It's primary focus is to give you awareness into your triggers and explore around why you do what you do and when you do it. Allowing you to notice things and respond to them in healthier ways.<p>
 
   [![License: GPL-3.0](https://img.shields.io/badge/License_GPL--3.0-blue?style=for-the-badge)](LICENSE.md)
   [![Android Badge](https://img.shields.io/badge/Android-3DDC84?logo=android&logoColor=fff&style=for-the-badge)]()
