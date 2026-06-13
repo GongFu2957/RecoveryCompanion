@@ -149,7 +149,7 @@ private fun LogEntryTextFieldPreview() {
             error = null,
             supportingText = "You got it boss",
             endIcon = helpQuestion,
-            onHelpClick = {},
+            onHelpClick = { },
             modifier = Modifier.fillMaxWidth(),
             helpText = "You need a couple dollars in their aye?"
         )

@@ -3,6 +3,7 @@ package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -27,14 +28,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -46,6 +52,7 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -60,6 +67,7 @@ import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
+import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.Typography
 import com.gongfu.recoverycompanion.ui.theme.helpQuestion
@@ -134,16 +142,12 @@ fun AddEditLogScreen(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState
     )
-    val titleState = rememberTextFieldState(
-    )
-    val descriptionState = rememberTextFieldState(
-    )
-    val triggerState = rememberTextFieldState(
-    )
-    val locationState = rememberTextFieldState(
-    )
-    val bodyResponseState = rememberTextFieldState(
-    )
+    val titleState = rememberTextFieldState()
+    val dateTimeState = rememberSaveable { state.epochMillis }
+    val descriptionState = rememberTextFieldState()
+    val triggerState = rememberTextFieldState()
+    val locationState = rememberTextFieldState()
+    val bodyResponseState = rememberTextFieldState()
     //Repopulate Fields to Edit Log
     LaunchedEffect(state.selectedLog?.id) {
         println("LaunchedEffect triggered for log ${state.selectedLog?.id}")
@@ -158,16 +162,15 @@ fun AddEditLogScreen(
     }
 
     // Delete Dialog
-    if (state.openDeleteDialog) {
+    if (state.showDeleteDialog) {
         BasicAlertDialog(
-            onDismissRequest = {
-                // Dismiss the dialog when the user clicks outside the dialog or on the back
-                // button. If you want to disable that functionality, simply use an empty
-                // onDismissRequest.
-            }
+            // Close Dialog when clicking outside the dialog.
+            onDismissRequest = { onAction(AddEditLogAction.OnDismissDelete) }
         ) {
             Surface(
-                modifier = Modifier.widthIn(max = 300.dp).wrapContentHeight(),
+                modifier = Modifier
+                    .widthIn(max = 300.dp)
+                    .wrapContentHeight(),
                 shape = MaterialTheme.shapes.large,
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 tonalElevation = AlertDialogDefaults.TonalElevation,
@@ -192,7 +195,7 @@ fun AddEditLogScreen(
                         horizontalArrangement = Arrangement.End
                     ) {
                         TextButton(
-                            onClick = { onAction(AddEditLogAction.DismissDelete) },
+                            onClick = { onAction(AddEditLogAction.OnDismissDelete) },
                         ) {
                             Text(text = stringResource(R.string.add_log_delete_dismiss))
                         }
@@ -209,7 +212,6 @@ fun AddEditLogScreen(
             }
         }
     }
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -248,6 +250,54 @@ fun AddEditLogScreen(
                     state = titleState,
                     error = state.fieldErrors[LogField.TITLE]
                 )
+                // Date/Time
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = formatEpochMillis(dateTimeState),
+                        onValueChange = {},
+                        label = { Text("Date & Time") },
+                        singleLine = true,
+                        readOnly = true,
+                        trailingIcon = {
+                            Row {
+                                    Icon(
+                                        Icons.Default.EditCalendar,
+                                        contentDescription = "Change Date",
+                                        modifier = Modifier
+                                            .clickable { onAction(AddEditLogAction.OnDateClick) }
+                                            .padding(end = 12.dp)
+                                    )
+                                Icon(
+                                    Icons.Default.AccessTime,
+                                    contentDescription = "Change Time",
+                                    modifier = Modifier
+                                        .clickable { onAction(AddEditLogAction.OnTimeClick) }
+                                        .padding(end = 12.dp)
+                                )
+                            }
+                        },
+                        textStyle = LocalTextStyle.current.copy(
+                           color = MaterialTheme.colorScheme.onSurface,
+                        ),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
+                                alpha = 0.04f
+                            ),
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 350.dp)
+                    )
+                }
                 // Description
                 LogEntryTextField(
                     label = stringResource(R.string.add_log_description),
@@ -360,6 +410,7 @@ fun AddEditLogScreen(
                 Button(
                     onClick = { onAction(AddEditLogAction.OnSaveClick(
                         title = titleState.text.toString(),
+                        epochMillis = state.epochMillis,
                         description = descriptionState.text.toString(),
                         trigger = triggerState.text.toString(),
                         location = locationState.text.toString(),
@@ -408,11 +459,9 @@ private fun AddEditLogScreenPreview() {
 private fun AddEditLogDialogPreview() {
     RecoveryCompanionTheme {
         AddEditLogScreen(
-            state = AddEditLogState(openDeleteDialog = true),
+            state = AddEditLogState(showDeleteDialog = true),
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )
     }
 }
-
-

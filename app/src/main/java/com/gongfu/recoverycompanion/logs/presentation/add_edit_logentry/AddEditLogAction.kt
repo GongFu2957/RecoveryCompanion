@@ -3,6 +3,7 @@ package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 sealed interface AddEditLogAction {
     data class OnSaveClick(
         val title: String,
+        val epochMillis: Long,
         val description: String,
         val trigger: String,
         val location: String,
@@ -17,5 +18,7 @@ sealed interface AddEditLogAction {
 
     data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction
-    data object DismissDelete : AddEditLogAction
+    data object OnDismissDelete : AddEditLogAction
+    data object OnDateClick : AddEditLogAction
+    data object OnTimeClick : AddEditLogAction
 }

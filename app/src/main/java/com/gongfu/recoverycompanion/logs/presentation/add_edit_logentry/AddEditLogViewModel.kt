@@ -39,6 +39,7 @@ class AddEditLogViewModel(
                 _state.update { it.copy(isSavingLog = true) }
                 onSaveClicked(
                     title = action.title,
+                    epochMillis = action.epochMillis,
                     description = action.description,
                     trigger = action.trigger,
                     location = action.location,
@@ -57,15 +58,17 @@ class AddEditLogViewModel(
             }
             is AddEditLogAction.OnDeleteClick -> {
                 if (_state.value.logId != null) {
-                    _state.update { it.copy(openDeleteDialog = true) }
+                    _state.update { it.copy(showDeleteDialog = true) }
                 }
             }
             is AddEditLogAction.OnDeletePermanently -> {
                 deleteLogPermanently()
             }
-            is AddEditLogAction.DismissDelete -> {
-                _state.update { it.copy(openDeleteDialog = false) }
+            is AddEditLogAction.OnDismissDelete -> {
+                _state.update { it.copy(showDeleteDialog = false) }
             }
+            is AddEditLogAction.OnDateClick -> {}
+            is AddEditLogAction.OnTimeClick -> {}
         }
     }
 
@@ -111,6 +114,7 @@ class AddEditLogViewModel(
     }
     fun onSaveClicked(
         title: String,
+        epochMillis: Long,
         description: String,
         trigger: String,
         location: String,
@@ -133,13 +137,11 @@ class AddEditLogViewModel(
 
         _state.update { it.copy(isSavingLog = true, fieldErrors = emptyMap()) }
 
-        val timestamp = _state.value.selectedLog?.timestamp
-
         viewModelScope.launch {
             try {
                 val log = LogEntry(
                     id = state.value.logId ?: 0L,
-                    timestamp = timestamp ?: System.currentTimeMillis(),
+                    timestamp = epochMillis,
                     title = title,
                     description = description,
                     trigger = trigger,
