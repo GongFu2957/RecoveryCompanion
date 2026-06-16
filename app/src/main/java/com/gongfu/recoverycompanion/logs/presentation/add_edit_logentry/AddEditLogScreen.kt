@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
+import com.gongfu.recoverycompanion.core.presentation.designsystem.components.DaterPickerModal
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
@@ -143,7 +144,6 @@ fun AddEditLogScreen(
         state = topAppBarState
     )
     val titleState = rememberTextFieldState()
-    val dateTimeState = rememberSaveable { state.epochMillis }
     val descriptionState = rememberTextFieldState()
     val triggerState = rememberTextFieldState()
     val locationState = rememberTextFieldState()
@@ -212,6 +212,17 @@ fun AddEditLogScreen(
             }
         }
     }
+
+    // Show Date Picker
+    if (state.showDatePicker) {
+        DaterPickerModal(
+            currentDateInMillis = state.epochMillis,
+            onDateSelected = { millis ->
+                onAction(AddEditLogAction.OnDateSelected(millis))
+            },
+            onDismiss = { onAction(AddEditLogAction.OnDateDismiss) }
+        )
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -259,20 +270,20 @@ fun AddEditLogScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     OutlinedTextField(
-                        value = formatEpochMillis(dateTimeState),
+                        value = formatEpochMillis(state.epochMillis),
                         onValueChange = {},
                         label = { Text("Date & Time") },
                         singleLine = true,
                         readOnly = true,
                         trailingIcon = {
                             Row {
-                                    Icon(
-                                        Icons.Default.EditCalendar,
-                                        contentDescription = "Change Date",
-                                        modifier = Modifier
-                                            .clickable { onAction(AddEditLogAction.OnDateClick) }
-                                            .padding(end = 12.dp)
-                                    )
+                                Icon(
+                                    Icons.Default.EditCalendar,
+                                    contentDescription = "Change Date",
+                                    modifier = Modifier
+                                        .clickable { onAction(AddEditLogAction.OnDatePickerClick) }
+                                        .padding(end = 12.dp)
+                                )
                                 Icon(
                                     Icons.Default.AccessTime,
                                     contentDescription = "Change Time",

@@ -67,7 +67,18 @@ class AddEditLogViewModel(
             is AddEditLogAction.OnDismissDelete -> {
                 _state.update { it.copy(showDeleteDialog = false) }
             }
-            is AddEditLogAction.OnDateClick -> {}
+            is AddEditLogAction.OnDatePickerClick -> {
+                _state.update { it.copy(showDatePicker = true) }
+            }
+            is AddEditLogAction.OnDateSelected -> {
+                _state.update { it.copy(
+                    epochMillis = action.newMillis,
+                    showDatePicker = false
+                ) }
+            }
+            is AddEditLogAction.OnDateDismiss -> {
+                _state.update { it.copy(showDatePicker = false) }
+            }
             is AddEditLogAction.OnTimeClick -> {}
         }
     }
@@ -103,6 +114,7 @@ class AddEditLogViewModel(
                             logId = log.id,
                             intensityLevel = log.intensityLevel,
                             outcome = log.outcome,
+                            epochMillis = log.timestamp
                         )
                     }
                 }
