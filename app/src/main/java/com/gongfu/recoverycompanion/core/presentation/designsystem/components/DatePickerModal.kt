@@ -8,7 +8,6 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
-import java.util.TimeZone
 
 @Composable
 fun DaterPickerModal(
