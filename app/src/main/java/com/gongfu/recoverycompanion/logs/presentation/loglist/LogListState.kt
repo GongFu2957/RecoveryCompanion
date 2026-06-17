@@ -12,4 +12,5 @@ data class LogListState(
     val selectedLogById: Long?  = null,
     val logOrder: LogOrder = LogOrder.Date(OrderType.Descending),
     val isFilterOpen: Boolean = false,
+    val showDropDownMenu: Boolean = false
 )

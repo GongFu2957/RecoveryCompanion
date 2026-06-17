@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
 
 class AddEditLogViewModel(
     private val logRepository: LogRepository,
@@ -58,7 +60,12 @@ class AddEditLogViewModel(
             }
             is AddEditLogAction.OnDeleteClick -> {
                 if (_state.value.logId != null) {
-                    _state.update { it.copy(showDeleteDialog = true) }
+                    _state.update {
+                        it.copy(
+                            showDropDownMenu = false,
+                            showDeleteDialog = true
+                        )
+                    }
                 }
             }
             is AddEditLogAction.OnDeletePermanently -> {
@@ -71,15 +78,20 @@ class AddEditLogViewModel(
                 _state.update { it.copy(showDatePicker = true) }
             }
             is AddEditLogAction.OnDateSelected -> {
-                _state.update { it.copy(
-                    epochMillis = action.newMillis,
-                    showDatePicker = false
-                ) }
+                val currentEpochMillis = _state.value.epochMillis
+                val newEpochMillis = action.newMillis
+                onUpdateSelectedDate(currentEpochMillis, newEpochMillis)
             }
             is AddEditLogAction.OnDateDismiss -> {
                 _state.update { it.copy(showDatePicker = false) }
             }
             is AddEditLogAction.OnTimeClick -> {}
+            AddEditLogAction.OnDropDownDismiss -> {
+                _state.update { it.copy(showDropDownMenu = false,)}
+            }
+            AddEditLogAction.OnDropDownExpand -> {
+                _state.update { it.copy(showDropDownMenu = true) }
+            }
         }
     }
 
@@ -173,6 +185,32 @@ class AddEditLogViewModel(
                 _state.update { it.copy(isSavingLog = false) }
             }
         }
+    }
+
+    private fun onUpdateSelectedDate(epochMillis: Long, newEpochMillis: Long) {
+        val currentInstant = Instant.ofEpochMilli(epochMillis)
+        val currentLocal = currentInstant.atZone(ZoneId.systemDefault())
+
+        // DatePicker gives UTC midnight for the selected date
+        // Convert DatePicker selected date to a LocalDate in current timezone
+        val pickerSelectedLocalDate = Instant.ofEpochMilli(newEpochMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+
+        // Combine the new date with existing time
+        val newLocalDateTime = pickerSelectedLocalDate
+            .atTime(currentLocal.toLocalTime())
+
+        val updatedEpochMillis = newLocalDateTime
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        // Update state value
+        _state.update { it.copy(
+            epochMillis = updatedEpochMillis,
+            showDatePicker = false
+        ) }
     }
 }
 

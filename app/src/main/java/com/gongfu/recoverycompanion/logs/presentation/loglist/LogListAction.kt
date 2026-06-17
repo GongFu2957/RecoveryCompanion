@@ -9,6 +9,8 @@ sealed interface LogListAction {
     data object OnFilterClick : LogListAction
 
     data object OnSettingsClick : LogListAction
+    data object OnDropDownExpand : LogListAction
+    data object OnDropDownDismiss : LogListAction
 
     data class Order(val order: LogOrder) : LogListAction
 }

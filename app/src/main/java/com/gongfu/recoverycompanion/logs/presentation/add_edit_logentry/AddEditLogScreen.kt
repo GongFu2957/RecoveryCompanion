@@ -215,7 +215,7 @@ fun AddEditLogScreen(
     // Show Date Picker
     if (state.showDatePicker) {
         DaterPickerModal(
-            currentDateInMillis = state.epochMillis,
+            currentDateTimeInMillis = state.epochMillis,
             onDateSelected = { millis ->
                 onAction(AddEditLogAction.OnDateSelected(millis))
             },
@@ -236,6 +236,9 @@ fun AddEditLogScreen(
                         )
                     )
                 } else emptyList(),
+                isDropDownOpen = state.showDropDownMenu,
+                onDropDownExpand = { onAction(AddEditLogAction.OnDropDownExpand) },
+                onDropDownDismiss = { onAction(AddEditLogAction.OnDropDownDismiss) },
                 onMenuItemClick = { onAction(AddEditLogAction.OnDeleteClick) },
                 scrollBehavior = scrollBehavior,
                 onBackClick = { onAction(AddEditLogAction.OnBackClick) }

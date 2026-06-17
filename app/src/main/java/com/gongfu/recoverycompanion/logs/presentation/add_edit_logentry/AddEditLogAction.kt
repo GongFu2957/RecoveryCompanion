@@ -19,6 +19,8 @@ sealed interface AddEditLogAction {
     data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction
     data object OnDismissDelete : AddEditLogAction
+    data object OnDropDownExpand : AddEditLogAction
+    data object OnDropDownDismiss : AddEditLogAction
     data object OnDatePickerClick : AddEditLogAction
     data class OnDateSelected(val newMillis: Long): AddEditLogAction
     data object OnDateDismiss : AddEditLogAction
