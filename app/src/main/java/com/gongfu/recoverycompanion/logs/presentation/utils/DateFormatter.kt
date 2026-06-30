@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 fun formatEpochMillis(epochMillis: Long): String {
+    //TODO add 24 hour functionality
     val instant = Instant.ofEpochMilli(epochMillis)
     val dayOfMonth = instant.atZone(ZoneId.systemDefault()).dayOfMonth
 

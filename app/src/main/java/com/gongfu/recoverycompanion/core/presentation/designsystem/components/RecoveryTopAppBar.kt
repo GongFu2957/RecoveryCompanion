@@ -24,10 +24,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,15 +46,15 @@ fun RecoveryTopAppBar(
     showFilterIcon: Boolean = false,
     title: String,
     menuItems: List<DropDownItem> = emptyList(),
+    isDropDownOpen: Boolean = false,
     onMenuItemClick: (Int) -> Unit = {},
     onFilterClick: () -> Unit = {},
     onBackClick: () -> Unit = {},
+    onDropDownExpand: () -> Unit = {},
+    onDropDownDismiss: () -> Unit = {},
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     startContent: (@Composable () -> Unit)? = null
 ) {
-    var isDropDownMenuOpen by rememberSaveable {
-        mutableStateOf(false)
-    }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
@@ -108,10 +104,8 @@ fun RecoveryTopAppBar(
             if (menuItems.isNotEmpty()) {
                 Box {
                    DropdownMenu(
-                       expanded = isDropDownMenuOpen,
-                       onDismissRequest = {
-                           isDropDownMenuOpen = false
-                       },
+                       expanded = isDropDownOpen,
+                       onDismissRequest = onDropDownDismiss,
                        shape = RoundedCornerShape(12.dp),
                        containerColor = MaterialTheme.colorScheme.surfaceContainer,
                        tonalElevation = 2.dp,
@@ -136,9 +130,7 @@ fun RecoveryTopAppBar(
                            }
                        }
                    }
-                   IconButton(onClick = {
-                       isDropDownMenuOpen = true
-                   }) {
+                   IconButton(onClick = onDropDownExpand) {
                        Icon(
                            imageVector = Icons.Default.MoreVert,
                            contentDescription = stringResource(R.string.more_menu),
@@ -170,6 +162,7 @@ private fun RecoveryTopAppBarPreview() {
                     title = "Delete"
                 )
             ),
+            isDropDownOpen = true,
             showFilterIcon = true,
             onFilterClick = {},
             onMenuItemClick = {},

@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
 
 class AddEditLogViewModel(
     private val logRepository: LogRepository,
@@ -39,6 +42,7 @@ class AddEditLogViewModel(
                 _state.update { it.copy(isSavingLog = true) }
                 onSaveClicked(
                     title = action.title,
+                    epochMillis = action.epochMillis,
                     description = action.description,
                     trigger = action.trigger,
                     location = action.location,
@@ -57,14 +61,45 @@ class AddEditLogViewModel(
             }
             is AddEditLogAction.OnDeleteClick -> {
                 if (_state.value.logId != null) {
-                    _state.update { it.copy(openDeleteDialog = true) }
+                    _state.update {
+                        it.copy(
+                            showDropDownMenu = false,
+                            showDeleteDialog = true
+                        )
+                    }
                 }
             }
             is AddEditLogAction.OnDeletePermanently -> {
                 deleteLogPermanently()
             }
-            is AddEditLogAction.DismissDelete -> {
-                _state.update { it.copy(openDeleteDialog = false) }
+            is AddEditLogAction.OnDismissDelete -> {
+                _state.update { it.copy(showDeleteDialog = false) }
+            }
+            is AddEditLogAction.OnDatePickerClick -> {
+                _state.update { it.copy(showDatePicker = true) }
+            }
+            is AddEditLogAction.OnDateSelected -> {
+                val currentEpochMillis = _state.value.epochMillis
+                val newEpochMillis = action.newMillis
+                onUpdateSelectedDate(currentEpochMillis, newEpochMillis)
+            }
+            is AddEditLogAction.OnDateDismiss -> {
+                _state.update { it.copy(showDatePicker = false) }
+            }
+            is AddEditLogAction.OnTimePickerClick -> {
+                _state.update { it.copy(showTimePicker = true) }
+            }
+            is AddEditLogAction.OnTimeSelected -> {
+                onUpdateSelectedTime(action.newMillis)
+            }
+            is AddEditLogAction.OnTimeDismiss -> {
+               _state.update { it.copy(showTimePicker = false) }
+            }
+            is AddEditLogAction.OnDropDownDismiss -> {
+                _state.update { it.copy(showDropDownMenu = false,)}
+            }
+            AddEditLogAction.OnDropDownExpand -> {
+                _state.update { it.copy(showDropDownMenu = true) }
             }
         }
     }
@@ -100,6 +135,7 @@ class AddEditLogViewModel(
                             logId = log.id,
                             intensityLevel = log.intensityLevel,
                             outcome = log.outcome,
+                            epochMillis = log.timestamp
                         )
                     }
                 }
@@ -111,6 +147,7 @@ class AddEditLogViewModel(
     }
     fun onSaveClicked(
         title: String,
+        epochMillis: Long,
         description: String,
         trigger: String,
         location: String,
@@ -133,13 +170,11 @@ class AddEditLogViewModel(
 
         _state.update { it.copy(isSavingLog = true, fieldErrors = emptyMap()) }
 
-        val timestamp = _state.value.selectedLog?.timestamp
-
         viewModelScope.launch {
             try {
                 val log = LogEntry(
                     id = state.value.logId ?: 0L,
-                    timestamp = timestamp ?: System.currentTimeMillis(),
+                    timestamp = epochMillis,
                     title = title,
                     description = description,
                     trigger = trigger,
@@ -159,6 +194,41 @@ class AddEditLogViewModel(
                 _state.update { it.copy(isSavingLog = false) }
             }
         }
+    }
+
+    private fun onUpdateSelectedDate(epochMillis: Long, newEpochMillis: Long) {
+        val currentZoneId = ZoneId.systemDefault()
+        val currentInstant = Instant.ofEpochMilli(epochMillis)
+        val currentLocal = currentInstant.atZone(currentZoneId)
+
+        // DatePicker gives UTC midnight for the selected date
+        // Convert DatePicker selected date to a LocalDate
+        val pickerSelectedLocalDate = Instant.ofEpochMilli(newEpochMillis)
+            .atZone(ZoneOffset.UTC)
+            .toLocalDate()
+
+        // Combine the new date with existing local time
+        val newLocalDateTime = pickerSelectedLocalDate
+            .atTime(currentLocal.toLocalTime())
+
+        val updatedEpochMillis = newLocalDateTime
+            .atZone(currentZoneId)
+            .toInstant()
+            .toEpochMilli()
+
+        // Update state value
+        _state.update { it.copy(
+            epochMillis = updatedEpochMillis,
+            showDatePicker = false
+        ) }
+    }
+
+    private fun onUpdateSelectedTime(newEpochMillis: Long) {
+        // update selected time
+        _state.update { it.copy(
+            epochMillis = newEpochMillis,
+            showTimePicker = false
+        ) }
     }
 }
 

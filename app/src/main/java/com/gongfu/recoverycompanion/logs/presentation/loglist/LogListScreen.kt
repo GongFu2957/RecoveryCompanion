@@ -15,7 +15,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
@@ -43,7 +42,6 @@ import com.gongfu.recoverycompanion.core.tmp.previewLogList
 import com.gongfu.recoverycompanion.logs.domain.util.FilterOption
 import com.gongfu.recoverycompanion.logs.domain.util.LogOrder
 import com.gongfu.recoverycompanion.logs.domain.util.OrderType
-import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.FilterItem
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.LogEntryItem
 import com.gongfu.recoverycompanion.ui.theme.LogoIcon
@@ -128,12 +126,7 @@ fun LogListScreen(
                 showFilterIcon = state.logs.isNotEmpty(),
                 title = stringResource(R.string.log_entries),
                 scrollBehavior = scrollBehavior,
-                menuItems = listOf(
-                    DropDownItem(
-                        icon = Icons.Default.Settings,
-                        title = stringResource(R.string.settings),
-                    )
-                ),
+                isDropDownOpen = state.showDropDownMenu,
                 onFilterClick = { onAction(LogListAction.OnFilterClick) },
                 startContent = {
                     Icon(
@@ -142,7 +135,9 @@ fun LogListScreen(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(30.dp)
                     )
-                }
+                },
+                onDropDownExpand = { onAction(LogListAction.OnDropDownExpand) },
+                onDropDownDismiss = { onAction(LogListAction.OnDropDownDismiss) }
             )
             //Filter section
         },

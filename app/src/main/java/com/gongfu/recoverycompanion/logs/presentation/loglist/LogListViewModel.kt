@@ -31,7 +31,13 @@ class LogListViewModel(
             is LogListAction.OnLogClick -> selectedLog(action.logId)
             is LogListAction.Order -> getLogs(action.order)
             is LogListAction.OnFilterClick -> toggleFilter()
-            else -> Unit
+            LogListAction.OnDropDownDismiss -> {
+                _state.update { it.copy(showDropDownMenu = false) }
+            }
+            LogListAction.OnDropDownExpand -> {
+                _state.update { it.copy(showDropDownMenu = true) }
+            }
+            LogListAction.OnSettingsClick -> {}
         }
     }
 
