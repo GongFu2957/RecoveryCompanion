@@ -11,18 +11,18 @@ sealed interface AddEditLogAction {
         val intensityLevel: Int,
         val outcome: Boolean
     ) : AddEditLogAction
-
     data class IntensityChanged(val level: Int) : AddEditLogAction
     data class OutcomeChanged(val outcome: Boolean) : AddEditLogAction
     data object OnDeleteClick : AddEditLogAction
-
     data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction
     data object OnDismissDelete : AddEditLogAction
     data object OnDropDownExpand : AddEditLogAction
     data object OnDropDownDismiss : AddEditLogAction
     data object OnDatePickerClick : AddEditLogAction
-    data class OnDateSelected(val newMillis: Long): AddEditLogAction
+    data class OnDateSelected(val newMillis: Long) : AddEditLogAction
     data object OnDateDismiss : AddEditLogAction
-    data object OnTimeClick : AddEditLogAction
+    data object OnTimePickerClick : AddEditLogAction
+    data object OnTimeDismiss : AddEditLogAction
+    data class OnTimeSelected(val newMillis: Long) : AddEditLogAction
 }

@@ -65,6 +65,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.DaterPickerModal
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
+import com.gongfu.recoverycompanion.core.presentation.designsystem.components.TimePickerModal
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
@@ -222,6 +223,16 @@ fun AddEditLogScreen(
             onDismiss = { onAction(AddEditLogAction.OnDateDismiss) }
         )
     }
+    // Show Time Picker
+    if (state.showTimePicker) {
+        TimePickerModal(
+            currentDateTimeInMillis = state.epochMillis,
+            onTimeSelected = { millis ->
+                onAction(AddEditLogAction.OnTimeSelected(millis))
+            },
+            onDismiss = { onAction(AddEditLogAction.OnTimeDismiss) }
+        )
+    }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -290,7 +301,7 @@ fun AddEditLogScreen(
                                     Icons.Default.AccessTime,
                                     contentDescription = "Change Time",
                                     modifier = Modifier
-                                        .clickable { onAction(AddEditLogAction.OnTimeClick) }
+                                        .clickable { onAction(AddEditLogAction.OnTimePickerClick) }
                                         .padding(end = 12.dp)
                                 )
                             }

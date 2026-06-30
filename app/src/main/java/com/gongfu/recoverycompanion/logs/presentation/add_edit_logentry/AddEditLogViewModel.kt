@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 class AddEditLogViewModel(
     private val logRepository: LogRepository,
@@ -85,8 +86,16 @@ class AddEditLogViewModel(
             is AddEditLogAction.OnDateDismiss -> {
                 _state.update { it.copy(showDatePicker = false) }
             }
-            is AddEditLogAction.OnTimeClick -> {}
-            AddEditLogAction.OnDropDownDismiss -> {
+            is AddEditLogAction.OnTimePickerClick -> {
+                _state.update { it.copy(showTimePicker = true) }
+            }
+            is AddEditLogAction.OnTimeSelected -> {
+                onUpdateSelectedTime(action.newMillis)
+            }
+            is AddEditLogAction.OnTimeDismiss -> {
+               _state.update { it.copy(showTimePicker = false) }
+            }
+            is AddEditLogAction.OnDropDownDismiss -> {
                 _state.update { it.copy(showDropDownMenu = false,)}
             }
             AddEditLogAction.OnDropDownExpand -> {
@@ -188,21 +197,22 @@ class AddEditLogViewModel(
     }
 
     private fun onUpdateSelectedDate(epochMillis: Long, newEpochMillis: Long) {
+        val currentZoneId = ZoneId.systemDefault()
         val currentInstant = Instant.ofEpochMilli(epochMillis)
-        val currentLocal = currentInstant.atZone(ZoneId.systemDefault())
+        val currentLocal = currentInstant.atZone(currentZoneId)
 
         // DatePicker gives UTC midnight for the selected date
-        // Convert DatePicker selected date to a LocalDate in current timezone
+        // Convert DatePicker selected date to a LocalDate
         val pickerSelectedLocalDate = Instant.ofEpochMilli(newEpochMillis)
-            .atZone(ZoneId.systemDefault())
+            .atZone(ZoneOffset.UTC)
             .toLocalDate()
 
-        // Combine the new date with existing time
+        // Combine the new date with existing local time
         val newLocalDateTime = pickerSelectedLocalDate
             .atTime(currentLocal.toLocalTime())
 
         val updatedEpochMillis = newLocalDateTime
-            .atZone(ZoneId.systemDefault())
+            .atZone(currentZoneId)
             .toInstant()
             .toEpochMilli()
 
@@ -210,6 +220,14 @@ class AddEditLogViewModel(
         _state.update { it.copy(
             epochMillis = updatedEpochMillis,
             showDatePicker = false
+        ) }
+    }
+
+    private fun onUpdateSelectedTime(newEpochMillis: Long) {
+        // update selected time
+        _state.update { it.copy(
+            epochMillis = newEpochMillis,
+            showTimePicker = false
         ) }
     }
 }
