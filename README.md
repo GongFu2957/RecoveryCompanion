@@ -32,8 +32,25 @@ Follow these steps to clone and run the project locally.
 
 Contributing is what makes open source so powerful. Collaborating and creating allows projects to grow and improve for the community as a whole. I thank _**You**_ for taking the time to contribute to the project.
 
-If you have a suggestion or an improvement, fork the repo and make a pull request! You can also open an issue and use the "enhancement" tag.
-If you like the project and the mission, consider giving the project a start so more people can see it!
+If you have a suggestion or an improvement, fork the repo and make a pull request. You can also open an issue and use the **"enhancement"** tag.
+
+If you like the project and the mission, consider giving the project a star so more people can see it!
+
+### Before you contribute
+
+- Open an issue or discussion first if the change is large or new. This avoids duplicate work and helps align on direction.
+- Make sure the feature is complete and useful in its current form before submitting.
+- UI changes should be clear to the user: use descriptive labels, icons, or tooltips where needed.
+
+### Project architecture
+
+This project follows **MVI (Model-View-Intent)** architecture:
+
+- **State** lives in the ViewModel / Store as immutable state.
+- **Actions / Events** are dispatched from the UI to update state.
+- Avoid using `var` to hold state inside Composables or business logic.
+
+If you are unsure where something belongs, ask in the issue or PR before writing code.
 
 ### Contributing Steps
 1.  Fork the Project
@@ -41,8 +58,6 @@ If you like the project and the mission, consider giving the project a start so 
 3. Commit changes (`'git commit -am 'New feature added'`)
 4. Push to the branch (`git push origin feature/FeatureName`)
 5. Open a Pull Request.
-
-
 
 ## License
 
