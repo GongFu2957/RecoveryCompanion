@@ -29,12 +29,15 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -44,7 +47,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -52,11 +54,13 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -66,6 +70,7 @@ import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.DaterPickerModal
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.RecoveryTopAppBar
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.TimePickerModal
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
@@ -412,24 +417,30 @@ fun AddEditLogScreen(
                 )
 
                 // Outcome Toggle
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.add_log_healthy_outcome),
-                        fontStyle = FontStyle.Italic
-                    )
-                    Switch(
-                        checked = state.outcome,
-                        onCheckedChange = { newOutcome ->
-                            onAction(AddEditLogAction.OutcomeChanged(newOutcome))
-                        },
-                    )
+                var expanded by remember { mutableStateOf(false) }
+
+                DropdownMenuItem(
+                    text = {
+                        Text(text = state.outcome.toString())
+                    },
+                    onClick = { expanded = true },
+                    trailingIcon = {
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = "Expand")
+                    }
+                )
+
+                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    OutcomeType.entries.forEach { type ->
+                        DropdownMenuItem(
+                            text = { Text(type.toString()) },
+                            onClick = {
+                                onAction(AddEditLogAction.OutcomeChanged(type))
+                                expanded = false
+                            }
+                        )
+                    }
                 }
+
                 // Save Button
                 Button(
                     onClick = { onAction(AddEditLogAction.OnSaveClick(
@@ -460,7 +471,7 @@ fun AddEditLogScreen(
 private val previewLogState = AddEditLogState(
     logId = null,
     intensityLevel = 5,
-    outcome = true,
+    outcome = OutcomeType.Neutral,
     isSavingLog = true,
 )
 

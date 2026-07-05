@@ -9,5 +9,11 @@ data class LogEntry(
     val location: String,
     val intensityLevel: Int,
     val bodyResponse: String,
-    val outcome: Boolean
+    val outcome: OutcomeType
 )
+
+enum class OutcomeType{
+    Success,
+    Neutral,
+    Slip
+}

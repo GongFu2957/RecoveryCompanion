@@ -2,6 +2,7 @@ package com.gongfu.recoverycompanion.logs.data.data_source
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 
 @Entity(tableName = "logs_entries")
 data class LogEntryEntity(
@@ -14,6 +15,6 @@ data class LogEntryEntity(
     val location: String,
     val intensityLevel: Int,
     val bodyResponse: String,
-    val outcome: Boolean
+    val outcome: OutcomeType
 )
 

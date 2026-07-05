@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -27,10 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
 import com.gongfu.recoverycompanion.ui.theme.slipLog
 import com.gongfu.recoverycompanion.ui.theme.successLog
+import com.gongfu.recoverycompanion.ui.theme.neutralLog
 import java.time.ZonedDateTime
 
 @Composable
@@ -40,6 +43,23 @@ fun LogEntryItem(
     modifier: Modifier = Modifier
 ) {
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
+
+    var logImage: ImageVector
+    var logColor: Color
+    when (log.outcome) {
+        OutcomeType.Success -> {
+            logImage = successLog
+            logColor = Color(77, 174, 80)
+        }
+        OutcomeType.Slip -> {
+            logImage = slipLog
+            logColor = Color(77, 174, 80)
+        }
+        else -> {
+            logImage = neutralLog
+            logColor = Color(120, 120, 120)
+        }
+    }
 
     Row(
         modifier = modifier
@@ -51,9 +71,9 @@ fun LogEntryItem(
 
     ) {
         Icon(
-            imageVector = if (!log.outcome) slipLog else successLog,
+            imageVector = logImage,
             contentDescription = "Icon",
-            tint = if (!log.outcome) Color(200,65,65) else Color(77,174,80),
+            tint = logColor,
             modifier = Modifier.size(70.dp)
         )
         Column(
@@ -123,7 +143,7 @@ private fun LogEntryItemPreview() {
                 id = 0, timestamp = timeStamp, title = "Woke up late again, I can't be",
                 description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
                 trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
-                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false
+                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = OutcomeType.Slip
             ),
             onClick = { /* TO DO */ },
             modifier = Modifier.background(
