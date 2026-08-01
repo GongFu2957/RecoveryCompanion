@@ -2,6 +2,7 @@ package com.gongfu.recoverycompanion.logs.data.mappers
 
 import com.gongfu.recoverycompanion.logs.data.data_source.LogEntryEntity
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 
 fun LogEntry.toLogEntryEntity(): LogEntryEntity {
    return LogEntryEntity(
@@ -13,7 +14,7 @@ fun LogEntry.toLogEntryEntity(): LogEntryEntity {
        location = location,
        intensityLevel = intensityLevel,
        bodyResponse = bodyResponse,
-       outcome = outcome
+       outcomeCode = outcome.ordinal
    )
 }
 
@@ -27,6 +28,6 @@ fun LogEntryEntity.toLogEntry(): LogEntry {
         location = location,
         intensityLevel = intensityLevel,
         bodyResponse = bodyResponse,
-        outcome = outcome
+        outcome = OutcomeType.entries.getOrElse(outcomeCode) { OutcomeType.NEUTRAL }
     )
 }

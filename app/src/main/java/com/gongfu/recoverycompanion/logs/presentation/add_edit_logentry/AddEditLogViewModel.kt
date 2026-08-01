@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 import com.gongfu.recoverycompanion.logs.domain.repository.LogRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +58,7 @@ class AddEditLogViewModel(
             }
 
             is AddEditLogAction.OutcomeChanged -> {
-                _state.update { it.copy(outcome = action.outcome) }
+                _state.update { it.copy(outcome = action.outcomeType) }
             }
             is AddEditLogAction.OnDeleteClick -> {
                 if (_state.value.logId != null) {
@@ -100,6 +101,12 @@ class AddEditLogViewModel(
             }
             AddEditLogAction.OnDropDownExpand -> {
                 _state.update { it.copy(showDropDownMenu = true) }
+            }
+            AddEditLogAction.OnOutcomeTypeDropDownExpand -> {
+
+            }
+            AddEditLogAction.OnOutcomeTypeDropDownDismiss -> {
+
             }
         }
     }
@@ -153,7 +160,7 @@ class AddEditLogViewModel(
         location: String,
         bodyResponse: String,
         intensityLevel: Int,
-        outcome: Boolean
+        outcome: OutcomeType
     ) {
         val errors = buildMap {
             if (title.isBlank()) put(LogField.TITLE, "Title cannot be empty")

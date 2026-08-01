@@ -27,8 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gongfu.recoverycompanion.R
 import com.gongfu.recoverycompanion.logs.domain.model.LogEntry
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
+import com.gongfu.recoverycompanion.ui.theme.neutralLog
 import com.gongfu.recoverycompanion.ui.theme.slipLog
 import com.gongfu.recoverycompanion.ui.theme.successLog
 import java.time.ZonedDateTime
@@ -41,6 +43,12 @@ fun LogEntryItem(
 ) {
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
+    val (logImage, logColor) = when (log.outcome) {
+        OutcomeType.SUCCESS -> successLog to Color(120,0,0)
+        OutcomeType.NEUTRAL -> neutralLog to Color(120,120,120)
+        OutcomeType.SLIP -> slipLog to Color(0,120,0)
+    }
+
     Row(
         modifier = modifier
             .clickable(onClick = onClick)
@@ -51,9 +59,9 @@ fun LogEntryItem(
 
     ) {
         Icon(
-            imageVector = if (!log.outcome) slipLog else successLog,
+            imageVector = logImage,
             contentDescription = "Icon",
-            tint = if (!log.outcome) Color(200,65,65) else Color(77,174,80),
+            tint = logColor,
             modifier = Modifier.size(70.dp)
         )
         Column(
@@ -123,7 +131,7 @@ private fun LogEntryItemPreview() {
                 id = 0, timestamp = timeStamp, title = "Woke up late again, I can't be",
                 description = "Snoozed alarm 5 times and missed my morning routine. Felt defeated before the day even started.",
                 trigger = "Oversleeping", location = "Bedroom", intensityLevel = 7,
-                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = false
+                bodyResponse = "Heavy fatigue, foggy brain, slight nausea", outcome = OutcomeType.SLIP
             ),
             onClick = { /* TO DO */ },
             modifier = Modifier.background(

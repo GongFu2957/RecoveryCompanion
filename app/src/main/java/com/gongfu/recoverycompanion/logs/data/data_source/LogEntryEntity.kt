@@ -14,6 +14,6 @@ data class LogEntryEntity(
     val location: String,
     val intensityLevel: Int,
     val bodyResponse: String,
-    val outcome: Boolean
+    val outcomeCode: Int
 )
 

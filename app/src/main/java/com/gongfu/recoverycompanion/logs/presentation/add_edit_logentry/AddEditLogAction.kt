@@ -1,5 +1,7 @@
 package com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry
 
+import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
+
 sealed interface AddEditLogAction {
     data class OnSaveClick(
         val title: String,
@@ -9,10 +11,10 @@ sealed interface AddEditLogAction {
         val location: String,
         val bodyResponse: String,
         val intensityLevel: Int,
-        val outcome: Boolean
+        val outcome: OutcomeType
     ) : AddEditLogAction
     data class IntensityChanged(val level: Int) : AddEditLogAction
-    data class OutcomeChanged(val outcome: Boolean) : AddEditLogAction
+    data class OutcomeChanged(val outcomeType: OutcomeType) : AddEditLogAction
     data object OnDeleteClick : AddEditLogAction
     data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction
@@ -25,4 +27,6 @@ sealed interface AddEditLogAction {
     data object OnTimePickerClick : AddEditLogAction
     data object OnTimeDismiss : AddEditLogAction
     data class OnTimeSelected(val newMillis: Long) : AddEditLogAction
+    data object OnOutcomeTypeDropDownExpand : AddEditLogAction
+    data object OnOutcomeTypeDropDownDismiss : AddEditLogAction
 }
