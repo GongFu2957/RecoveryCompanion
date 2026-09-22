@@ -424,7 +424,7 @@ fun AddEditLogScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
@@ -432,7 +432,10 @@ fun AddEditLogScreen(
                         fontStyle = FontStyle.Italic
                     )
                     var expandedOutcomeMenu by remember { mutableStateOf(false) }
-                    Box(modifier = Modifier.fillMaxSize()) {
+                    Box(
+                        contentAlignment = Alignment.BottomEnd,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
                         IconButton(
                             onClick = { expandedOutcomeMenu = true }
                         ) {
@@ -440,7 +443,7 @@ fun AddEditLogScreen(
                         }
                         DropdownMenu(
                             expanded = expandedOutcomeMenu,
-                            onDismissRequest = { expandedOutcomeMenu = false }
+                            onDismissRequest = { expandedOutcomeMenu = false },
                         ) {
                             DropdownMenuItem(
                                 text = { Text("Slip") },
