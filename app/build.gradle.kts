@@ -1,23 +1,27 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
-    kotlin("kapt")
-    alias(libs.plugins.kotlin.android)
-//    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+}
+
+//Set room schema location
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 android {
     namespace = "com.gongfu.recoverycompanion"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
     defaultConfig {
         applicationId = "com.gongfu.recoverycompanion"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "0.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,22 +42,13 @@ android {
     buildFeatures {
         compose = true
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 }
-
-configurations.all { // Temp fix for agp and ksp
-    exclude(group = "com.intellij", module = "annotations")
-}
-
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -71,6 +66,6 @@ dependencies {
     implementation(libs.bundles.room)
     //Extended Icons
     implementation(libs.androidx.compose.material.icons.extended)
-    // Temporary kapt instead of ksp
-    kapt(libs.room.compiler)
+    //KSP
+    ksp(libs.room.compiler)
 }
