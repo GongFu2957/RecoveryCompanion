@@ -507,6 +507,7 @@ private val previewLogState = AddEditLogState(
     intensityLevel = 5,
     outcome = OutcomeType.NEUTRAL,
     isSavingLog = true,
+    showDropDownMenu = true
 )
 
 private val previewLogStateEmpty = AddEditLogState()
@@ -529,6 +530,18 @@ private fun AddEditLogDialogPreview() {
     RecoveryCompanionTheme {
         AddEditLogScreen(
             state = AddEditLogState(showDeleteDialog = true),
+            onAction = {},
+            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun AddEditLogDropDownPreview() {
+    RecoveryCompanionTheme {
+        AddEditLogScreen(
+            state = previewLogState,
             onAction = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         )

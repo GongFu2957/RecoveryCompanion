@@ -1,21 +1,19 @@
 [versions]
-agp = "9.0.1"
-coreKtx = "1.10.1"
+agp = "9.1.1"
+coreKtx = "1.19.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.6.1"
-activityCompose = "1.8.0"
+lifecycleRuntimeKtx = "2.10.0"
+activityCompose = "1.13.0"
 kotlin = "2.2.10"
-composeBom = "2026.02.00"
+composeBom = "2026.09.00"
 koin = "4.1.1"
-room = "2.8.4"
-ksp = "2.3.2"
+room = "2.8.5"
+ksp = "2.3.12"
 navigationRuntimeKtx = "2.9.7"
 material-icons-extended = "1.7.8"
-uiText = "1.10.3"
 navigationCompose = "2.9.7"
-material3 = "1.4.0"
 
 
 [libraries]
@@ -41,11 +39,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "material-icons-extended" }
-androidx-compose-ui-text = { group = "androidx.compose.ui", name = "ui-text", version.ref = "uiText" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeKtx" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 
 
 
@@ -53,8 +49,8 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3",
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-#ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
 
 [bundles]
 koin = [
@@ -71,12 +67,10 @@ compose = [
     "androidx-compose-material-icons-extended",
     "androidx-navigation-compose",
     "androidx-compose-ui-tooling-preview",
-    "androidx-compose-ui-text",
     "androidx-lifecycle-runtime-compose"
 ]
 
 room = [
-    "room-compiler",
     "room-runtime",
     "room-ktx"
 ]
