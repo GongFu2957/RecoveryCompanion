@@ -38,4 +38,8 @@
     <string name="add_log_delete_confirm">Confirm</string>
     <string name="add_log_edit_date">Change Date</string>
     <string name="add_log_edit_time">Change Time</string>
+    <string name="add_log_outcome">Healthy Outcome?</string>
+    <string name="outcome_slip">Slip</string>
+    <string name="outcome_success">Success</string>
+    <string name="outcome_neutral">Neutral</string>
 </resources>

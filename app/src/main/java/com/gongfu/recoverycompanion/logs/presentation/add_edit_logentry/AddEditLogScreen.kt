@@ -5,7 +5,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,15 +32,11 @@ import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -56,14 +51,10 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -75,6 +66,7 @@ import com.gongfu.recoverycompanion.core.presentation.designsystem.components.Re
 import com.gongfu.recoverycompanion.core.presentation.designsystem.components.TimePickerModal
 import com.gongfu.recoverycompanion.logs.domain.model.OutcomeType
 import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.LogEntryTextField
+import com.gongfu.recoverycompanion.logs.presentation.add_edit_logentry.components.OutcomeDropdownMenu
 import com.gongfu.recoverycompanion.logs.presentation.loglist.components.DropDownItem
 import com.gongfu.recoverycompanion.logs.presentation.utils.formatEpochMillis
 import com.gongfu.recoverycompanion.ui.theme.RecoveryCompanionTheme
@@ -315,7 +307,7 @@ fun AddEditLogScreen(
                             }
                         },
                         textStyle = LocalTextStyle.current.copy(
-                           color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onSurface,
                         ),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
@@ -389,7 +381,7 @@ fun AddEditLogScreen(
                             steps = 8
                         )
 
-                       // Steps labels
+                        // Steps labels
                         Row(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier
@@ -398,13 +390,13 @@ fun AddEditLogScreen(
                         ) {
                             repeat(10) { index ->
                                 Text(
-                                  text = "${1 + index}",
-                                  fontSize = 12.sp,
-                                  color = MaterialTheme.colorScheme.onBackground,
-                                  modifier = Modifier
-                                      .wrapContentWidth(Alignment.CenterHorizontally),
-                                  textAlign = TextAlign.Center
-                              )
+                                    text = "${1 + index}",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onBackground,
+                                    modifier = Modifier
+                                        .wrapContentWidth(Alignment.CenterHorizontally),
+                                    textAlign = TextAlign.Center
+                                )
                             }
                         }
                     }
@@ -420,73 +412,27 @@ fun AddEditLogScreen(
                 )
 
                 // Outcome Toggle
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(R.string.add_log_healthy_outcome),
-                        fontStyle = FontStyle.Italic
-                    )
-                    var expandedOutcomeMenu by remember { mutableStateOf(false) }
-                    Box(
-                        contentAlignment = Alignment.BottomEnd,
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        IconButton(
-                            onClick = { expandedOutcomeMenu = true }
-                        ) {
-                            Icon(Icons.Default.KeyboardArrowDown, contentDescription = null)
-                        }
-                        DropdownMenu(
-                            expanded = expandedOutcomeMenu,
-                            onDismissRequest = { expandedOutcomeMenu = false },
-                        ) {
-                            DropdownMenuItem(
-                                text = { Text("Slip") },
-                                onClick = {
-                                    val newOutcome = OutcomeType.SLIP
-                                    onAction(AddEditLogAction.OutcomeChanged(newOutcome))
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Success") },
-                                onClick = {
-                                    val newOutcome = OutcomeType.SUCCESS
-                                    onAction(AddEditLogAction.OutcomeChanged(newOutcome))
-                                }
-                            )
-                            DropdownMenuItem(
-                                text = { Text("Neutral") },
-                                onClick = {
-                                    val newOutcome = OutcomeType.NEUTRAL
-                                    onAction(AddEditLogAction.OutcomeChanged(newOutcome))
-                                }
-                            )
-                        }
-//                    Switch(
-//                        checked = state.outcome,
-//                        onCheckedChange = { newOutcome ->
-//                            onAction(AddEditLogAction.OutcomeChanged(newOutcome))
-//                        },
-//                    )
-                    }
-                }
+                OutcomeDropdownMenu(
+                    selected = state.outcome,
+                    onOutcomeSelected = { onAction(AddEditLogAction.OnOutcomeChanged(it)) }
+                )
+
                 // Save Button
                 Button(
-                    onClick = { onAction(AddEditLogAction.OnSaveClick(
-                        title = titleState.text.toString(),
-                        epochMillis = state.epochMillis,
-                        description = descriptionState.text.toString(),
-                        trigger = triggerState.text.toString(),
-                        location = locationState.text.toString(),
-                        bodyResponse = bodyResponseState.text.toString(),
-                        intensityLevel = state.intensityLevel,
-                        outcome = state.outcome
-                        )) },
+                    onClick = {
+                        onAction(
+                            AddEditLogAction.OnSaveClick(
+                                title = titleState.text.toString(),
+                                epochMillis = state.epochMillis,
+                                description = descriptionState.text.toString(),
+                                trigger = triggerState.text.toString(),
+                                location = locationState.text.toString(),
+                                bodyResponse = bodyResponseState.text.toString(),
+                                intensityLevel = state.intensityLevel,
+                                outcome = state.outcome
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .padding(top = 24.dp),
                     enabled = !state.isSavingLog

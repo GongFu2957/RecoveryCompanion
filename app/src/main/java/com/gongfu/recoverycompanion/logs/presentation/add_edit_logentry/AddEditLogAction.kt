@@ -14,7 +14,7 @@ sealed interface AddEditLogAction {
         val outcome: OutcomeType
     ) : AddEditLogAction
     data class IntensityChanged(val level: Int) : AddEditLogAction
-    data class OutcomeChanged(val outcomeType: OutcomeType) : AddEditLogAction
+    data class OnOutcomeChanged(val outcomeType: OutcomeType) : AddEditLogAction
     data object OnDeleteClick : AddEditLogAction
     data object OnDeletePermanently : AddEditLogAction
     data object OnBackClick : AddEditLogAction

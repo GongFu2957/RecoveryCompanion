@@ -57,7 +57,7 @@ class AddEditLogViewModel(
                 _state.update { it.copy(intensityLevel = action.level) }
             }
 
-            is AddEditLogAction.OutcomeChanged -> {
+            is AddEditLogAction.OnOutcomeChanged -> {
                 _state.update { it.copy(outcome = action.outcomeType) }
             }
             is AddEditLogAction.OnDeleteClick -> {
