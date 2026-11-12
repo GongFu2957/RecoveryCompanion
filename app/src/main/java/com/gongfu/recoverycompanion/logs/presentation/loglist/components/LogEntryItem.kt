@@ -44,9 +44,9 @@ fun LogEntryItem(
     val contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black
 
     val (logImage, logColor) = when (log.outcome) {
-        OutcomeType.SUCCESS -> successLog to Color(120,0,0)
+        OutcomeType.SUCCESS -> successLog to Color(0,120,0)
         OutcomeType.NEUTRAL -> neutralLog to Color(120,120,120)
-        OutcomeType.SLIP -> slipLog to Color(0,120,0)
+        OutcomeType.SLIP -> slipLog to Color(120,0,0)
     }
 
     Row(

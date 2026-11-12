@@ -10,6 +10,7 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,16 +61,26 @@ fun OutcomeDropdownMenu(
 
         ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            shape = RoundedCornerShape(16.dp)
         ) {
             entries.forEach { outcome ->
                 DropdownMenuItem(
-                    text = { outcome.label() },
+                    text = {
+                        Text(
+                            text = outcome.label(),
+                            color = if (outcome == selected) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.secondary
+                            }
+                        )
+                    },
                     onClick = {
                         onOutcomeSelected(outcome)
                         expanded = false
                     },
-                    leadingIcon =
+                    trailingIcon =
                         if (outcome == selected) {
                             { Icon(Icons.Default.Check, contentDescription = null) }
                         } else null,
